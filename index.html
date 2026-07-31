@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#1c1914">
-<title>ЭЛЕКТРОН-95 — симулятор кассира</title>
+<title>ЭЛЕКТРОН-95 — симулятор кассира 2.0</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=PT+Sans:wght@400;700&family=PT+Mono&display=swap');
 
@@ -29,19 +29,40 @@ button{touch-action:manipulation;font-family:inherit}
 .hud-shift{font-size:11px;color:#93a396;text-transform:uppercase;letter-spacing:.5px;line-height:1.25}
 .hud-shift b{display:block;color:#c4d2c6;font-size:11.5px}
 #hClock{font-family:'PT Mono';font-size:17px;color:#7dff9b;text-shadow:0 0 8px rgba(125,255,155,.5)}
-.hud-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.hstat{text-align:center;line-height:1.1;padding:0 10px;border-left:1px solid rgba(255,255,255,.09)}
+.hud-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hstat{text-align:center;line-height:1.1;padding:0 9px;border-left:1px solid rgba(255,255,255,.09)}
 .hstat:first-child{border-left:none}
 .hstat i{display:block;font-style:normal;font-size:8.5px;letter-spacing:1.5px;color:#7f9184}
 .hstat b{font-family:'PT Mono';font-size:16px;color:#ffd97a;text-shadow:0 0 8px rgba(255,217,122,.35)}
 #hStars{color:#ffb84d}
-#hErr{color:#ff8a7a}
+#hPen{color:#ff8a7a}
 .hbtn{background:#332e26;border:1px solid #4a4438;color:#d8d0c0;border-radius:6px;width:34px;height:30px;
   cursor:pointer;font-size:14px;transition:.15s}
 .hbtn:hover{background:#443d31;transform:translateY(-1px)}
 
+/* ================= ЧАС ПИК / ЭКЗАМЕН ================= */
+#rush,#examBar{position:fixed;top:54px;left:50%;transform:translateX(-50%);z-index:55;display:none;
+  align-items:center;gap:12px;border-radius:10px;padding:8px 16px;
+  box-shadow:0 8px 24px rgba(0,0,0,.55)}
+#rush{background:repeating-linear-gradient(45deg,#3a1210 0 12px,#4a1a14 12px 24px);
+  border:2px solid #d84437;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 22px rgba(216,68,55,.35)}
+#examBar{background:repeating-linear-gradient(45deg,#0e2a26 0 12px,#12352f 12px 24px);
+  border:2px solid #37b0a0;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 22px rgba(55,176,160,.3)}
+#rush.on,#examBar.on{display:flex;animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+#rush b{font-family:'Russo One';color:#ff6a5a;font-size:14px;letter-spacing:2px;
+  text-shadow:0 0 10px rgba(255,90,70,.7);animation:pulse 1s infinite}
+#examBar b{font-family:'Russo One';color:#5fe0cc;font-size:14px;letter-spacing:2px;text-shadow:0 0 10px rgba(95,224,204,.7)}
+.rb{width:150px;height:11px;background:#1a0a08;border-radius:6px;overflow:hidden;border:1px solid #6a2a20}
+#examBar .rb{background:#081a16;border-color:#1f5a50}
+#rushFill,#examFill{display:block;height:100%;width:0;transition:width .3s}
+#rushFill{background:linear-gradient(90deg,#e0aa4a,#4cd06a)}
+#examFill{background:linear-gradient(90deg,#37b0a0,#7dff9b)}
+#rushTxt,#examTxt{font:700 12px 'PT Mono';color:#ffd97a;white-space:nowrap}
+#scene.rush{animation:rushGlow 1.4s ease-in-out infinite}
+@keyframes rushGlow{0%,100%{box-shadow:inset 0 0 0 rgba(216,68,55,0)}50%{box-shadow:inset 0 0 90px rgba(216,68,55,.3)}}
+
 /* ================= СЦЕНА ================= */
-#scene{position:relative;flex:1;min-height:340px;overflow:hidden;
+#scene{position:relative;flex:1;min-height:400px;overflow:hidden;
   background:linear-gradient(#2c4b41 0%,#223b33 52%,#1a2b25 100%)}
 #scene::before{content:'';position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;
   background:repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 2px,transparent 2px 74px),
@@ -56,7 +77,7 @@ button{touch-action:manipulation;font-family:inherit}
 .ticker{position:absolute;top:1.5%;left:50%;transform:translateX(-50%);width:46%;max-width:640px;
   background:#140e08;border:3px solid #3a2c20;border-radius:6px;overflow:hidden;z-index:3;
   box-shadow:0 4px 12px rgba(0,0,0,.4)}
-.tk{display:flex;white-space:nowrap;animation:tick 26s linear infinite;
+.tk{display:flex;white-space:nowrap;animation:tick 28s linear infinite;
   font:700 12px 'PT Mono';color:#ffb02e;text-shadow:0 0 8px rgba(255,176,46,.75);padding:5px 0;letter-spacing:1px}
 .tk span{padding-right:48px}
 @keyframes tick{to{transform:translateX(-50%)}}
@@ -137,6 +158,7 @@ button{touch-action:manipulation;font-family:inherit}
 #people{position:absolute;inset:0;z-index:4;pointer-events:none}
 .person{position:absolute;bottom:calc(35% - 50px);width:106px;transition:left 1s ease;pointer-events:auto;cursor:pointer}
 .person.rush{transition:left .6s ease-in}
+.person.expelled{transition:left .5s ease-in,transform .5s ease-in;transform:rotate(26deg) translateY(-10px)}
 .person.walk .p-in{animation-duration:.45s}
 .p-in{display:flex;flex-direction:column;align-items:center;animation:bob 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -157,6 +179,8 @@ button{touch-action:manipulation;font-family:inherit}
 .p-cheek{position:absolute;top:29px;width:9px;height:5px;border-radius:50%;background:#e8846a;opacity:.3;z-index:2;transition:.3s}
 .p-cheek.l{left:7px}.p-cheek.r{right:7px}
 .mood-angry .p-cheek{opacity:.65}
+.person.rowdy .p-cheek{opacity:.8;background:#e05040}
+.person.rowdy .p-head{box-shadow:inset -5px -5px 0 rgba(160,30,20,.25)}
 .p-must{position:absolute;top:29px;left:50%;transform:translateX(-50%);width:16px;height:6px;
   background:var(--hc,#3a2a18);border-radius:0 0 9px 9px;z-index:3}
 .p-mouth{position:absolute;left:50%;bottom:8px;width:17px;height:8px;transform:translateX(-50%);
@@ -182,6 +206,8 @@ button{touch-action:manipulation;font-family:inherit}
 .p-arm{position:absolute;bottom:-4px;width:20px;height:40px;border-radius:10px;
   background:color-mix(in srgb,var(--sh) 72%,#000)}
 .p-arm.l{left:-7px;transform:rotate(16deg)}.p-arm.r{right:-7px;transform:rotate(-16deg)}
+.person.rowdy .p-arm.l{transform:rotate(46deg) translateY(-14px)}
+.person.rowdy .p-arm.r{transform:rotate(-46deg) translateY(-14px)}
 .p-tag{position:absolute;top:13px;left:50%;transform:translateX(-50%);background:#fdfdf6;color:#333;
   font:700 9px 'PT Sans';padding:1px 6px;border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.3);z-index:2}
 .p-bub{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%) scale(.7);opacity:0;
@@ -190,8 +216,10 @@ button{touch-action:manipulation;font-family:inherit}
 .p-bub::after{content:'';position:absolute;bottom:-7px;left:50%;width:11px;height:11px;background:#fff;
   border-right:2px solid #26221c;border-bottom:2px solid #26221c;transform:translateX(-50%) rotate(45deg)}
 .p-bub.show{opacity:1;transform:translateX(-50%) scale(1)}
+.person.rowdy .p-bub{background:#ffe8e4;border-color:#8a2018;color:#8a2018}
+.person.rowdy .p-bub::after{background:#ffe8e4;border-color:#8a2018}
 
-/* ---- прилавок, лента, сканер ---- */
+/* ---- прилавок, лента, сканер, детектор, метёлка ---- */
 #counter{position:absolute;left:0;right:0;bottom:12%;height:23%;z-index:5;
   background:repeating-linear-gradient(90deg,#6d4526 0 4px,#74492a 4px 130px,#6a4224 130px 134px,#74492a 134px 260px);
   border-top:9px solid #96633a;box-shadow:0 -4px 0 #b07a48,inset 0 14px 18px rgba(0,0,0,.28),0 -10px 24px rgba(0,0,0,.3)}
@@ -203,9 +231,14 @@ button{touch-action:manipulation;font-family:inherit}
   border:2px solid #44484e;border-bottom:none;animation:beltMove 2.5s linear infinite}
 @keyframes beltMove{to{background-position:40px 0}}
 #beltItems{position:absolute;left:7.5%;right:27.5%;bottom:calc(100% + 13px);
-  display:flex;gap:12px;align-items:flex-end;z-index:6;padding:0 8px}
-.belt-item{background:none;border:none;padding:0;text-align:center;cursor:pointer;
-  animation:popIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .4s,opacity .4s;position:relative;width:84px}
+  display:flex;gap:12px;align-items:flex-end;z-index:6;padding:0 8px;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none}
+#beltItems::-webkit-scrollbar{display:none}
+#scanZone{position:absolute;left:0;top:-60px;width:13.5%;height:95px;z-index:5;pointer-events:none}
+.belt-item{background:none;border:none;padding:0;text-align:center;cursor:grab;flex-shrink:0;
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .4s,opacity .4s;position:relative;width:88px;
+  touch-action:none}
+.belt-item:active{cursor:grabbing}
 .belt-item:hover{transform:translateY(-4px)}
 .belt-item:hover .bi-ico{box-shadow:0 4px 8px rgba(0,0,0,.35),inset 0 -4px 6px rgba(0,0,0,.18),0 0 14px rgba(255,80,60,.5)}
 .belt-item .bi-ico{display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin:0 auto;
@@ -216,12 +249,14 @@ button{touch-action:manipulation;font-family:inherit}
   text-shadow:0 1px 2px rgba(0,0,0,.7);margin:3px 0 2px}
 .belt-item .bi-price{display:inline-block;font:700 12px 'PT Mono';color:#4a3208;background:#ffd94d;
   padding:1px 8px;border-radius:3px;transform:rotate(-3deg);box-shadow:1px 2px 3px rgba(0,0,0,.4)}
-.bi-bc{width:54px;height:13px;background-color:#fdfdf6;border-radius:2px;margin:3px auto 0;position:relative;
-  padding:1px 3px;background-image:repeating-linear-gradient(90deg,#1a1a1a 0 1.5px,transparent 1.5px 3.5px,#1a1a1a 3.5px 5px,transparent 5px 7px);
-  background-clip:content-box;background-origin:content-box}
-.bi-bc.bad{opacity:.8}
-.bi-bc.bad::after{content:'';position:absolute;left:-2px;right:-2px;top:45%;height:2.5px;background:#d84437;
-  transform:rotate(-9deg);border-radius:2px;box-shadow:0 0 3px rgba(0,0,0,.4)}
+.bi-bc{display:block;width:60px;margin:3px auto 0;background:#fdfdf6;border-radius:2px;padding:2px 4px 1px;
+  box-shadow:0 1px 2px rgba(0,0,0,.35);position:relative}
+.bi-bc i{display:block;height:13px;
+  background:repeating-linear-gradient(90deg,#1a1a1a 0 2px,transparent 2px 4px,#1a1a1a 4px 5px,transparent 5px 8px,#1a1a1a 8px 10px,transparent 10px 11px)}
+.bi-bc b{display:block;font:700 7px 'PT Mono';color:#1a1a1a;letter-spacing:.5px;text-align:center;margin-top:1px}
+.bi-bc.bad i{opacity:.7}
+.bi-bc.bad::after{content:'';position:absolute;left:-2px;right:-2px;top:40%;height:3px;background:#d84437;
+  transform:rotate(-8deg);border-radius:2px}
 .bi-plu{position:absolute;top:-7px;left:-6px;background:#565b62;color:#fff;font:700 9px 'PT Mono';
   padding:1px 5px;border-radius:4px;border:1.5px solid #e8e4d8;z-index:2}
 .belt-item .bi-qty{position:absolute;top:-8px;right:-4px;background:#d84437;color:#fff;
@@ -232,7 +267,12 @@ button{touch-action:manipulation;font-family:inherit}
 @keyframes zap{50%{transform:scale(1.18);filter:drop-shadow(0 0 10px rgba(125,255,155,.9))}}
 .belt-item.nope{animation:shakeX .32s}
 .belt-item.fly{transform:translate(170px,-34px) scale(.15) rotate(30deg);opacity:0}
+.belt-item.lifting{opacity:.3;filter:grayscale(.7)}
+.belt-item.flash{animation:hintP .4s 3}
 @keyframes popIn{from{transform:scale(.3);opacity:0}}
+.dragGhost{position:fixed;z-index:80;pointer-events:none;margin:0;
+  transform:translate(-50%,-62%) scale(1.1) rotate(-5deg);
+  filter:drop-shadow(0 14px 16px rgba(0,0,0,.55));animation:none;transition:none}
 .laser{position:absolute;left:-8px;right:-8px;top:14%;height:3px;border-radius:2px;background:#ff2818;z-index:5;
   box-shadow:0 0 12px 3px rgba(255,40,24,.85);animation:laserScan .28s ease-in-out forwards;pointer-events:none}
 @keyframes laserScan{0%{top:10%;opacity:0}18%{opacity:1}82%{opacity:1}100%{top:82%;opacity:0}}
@@ -244,22 +284,60 @@ button{touch-action:manipulation;font-family:inherit}
   background:linear-gradient(#454b54,#22262c);border-radius:7px 11px 5px 5px;
   box-shadow:0 3px 7px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2)}
 .sc-win{position:absolute;left:13px;top:3px;width:29px;height:5px;border-radius:2px;transform:rotate(-9deg);
-  background:#5a1210;box-shadow:0 0 5px rgba(255,60,40,.35);transition:.1s}
-#scanner.zap .sc-win{background:#ff3a28;box-shadow:0 0 16px 4px rgba(255,60,40,.95)}
+  background:#5a1210;box-shadow:0 0 5px rgba(255,60,40,.35);transition:.12s}
+#scanner.zap .sc-win,#scanner.aim .sc-win{background:#ff3a28;box-shadow:0 0 18px 5px rgba(255,60,40,.95)}
+#scanner.aim{animation:pulse .5s infinite}
 .sc-led{position:absolute;right:10px;top:13px;width:4px;height:4px;border-radius:50%;background:#37e06a;animation:pulse 2.4s infinite}
 
-#bagZone{position:absolute;right:5%;top:-70px;text-align:center;z-index:6;cursor:pointer}
+#detector{position:absolute;right:13.5%;top:-38px;width:64px;z-index:6}
+.dt-body{display:block;width:60px;height:30px;background:linear-gradient(#4a4f57,#2c3036);border-radius:5px;
+  position:relative;box-shadow:0 3px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2)}
+.dt-win{position:absolute;left:6px;top:6px;width:34px;height:18px;border-radius:3px;
+  background:linear-gradient(#241a44,#160f2c);box-shadow:inset 0 0 6px rgba(120,80,220,.35);transition:.15s}
+#detector.check .dt-win{background:linear-gradient(#5a2ab0,#3a1a7a);
+  box-shadow:0 0 16px rgba(150,90,255,.85),inset 0 0 8px rgba(190,130,255,.9)}
+#detector.ok .dt-win{box-shadow:0 0 10px rgba(80,224,120,.7)}
+#detector.bad .dt-win{background:linear-gradient(#6a1a14,#3a0f0a);box-shadow:0 0 16px rgba(255,60,40,.85)}
+.dt-led{position:absolute;top:10px;width:6px;height:6px;border-radius:50%;background:#1e2126;transition:.1s}
+.dt-led.g{right:16px}.dt-led.r{right:6px}
+#detector.ok .dt-led.g{background:#37e06a;box-shadow:0 0 8px rgba(55,224,106,.95)}
+#detector.bad .dt-led.r{background:#ff4a3a;box-shadow:0 0 9px rgba(255,74,58,.95);animation:pulse .5s infinite}
+#dtBill{position:absolute;left:9px;top:9px;z-index:2}
+.dt-lbl{display:block;text-align:center;font:700 7px 'PT Sans';color:#c8c2b4;letter-spacing:2px;margin-top:2px}
+#dtActs{position:absolute;right:11%;top:-76px;display:none;gap:6px;z-index:9}
+#dtActs.on{display:flex;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+.dt-btn{border:none;border-radius:6px;padding:8px 11px;font:700 10px 'PT Sans';letter-spacing:.5px;cursor:pointer;
+  box-shadow:0 3px 0 rgba(0,0,0,.45);transition:.1s}
+.dt-btn:active{transform:translateY(2px)}
+.dt-btn.ret{background:linear-gradient(#4aa866,#2f7d48);color:#fff}
+.dt-btn.risk{background:linear-gradient(#c85648,#a83a2e);color:#fff}
+
+#broom{position:absolute;right:1.8%;bottom:11%;width:30px;height:118px;z-index:6;cursor:pointer;
+  transform-origin:bottom center;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+#broom::before{content:'';position:absolute;top:0;left:12px;width:7px;height:82px;border-radius:4px;
+  background:linear-gradient(90deg,#c09a60,#8a6a3a);box-shadow:1px 2px 3px rgba(0,0,0,.4)}
+#broom::after{content:'';position:absolute;bottom:0;left:0;width:30px;height:38px;
+  background:repeating-linear-gradient(90deg,#d0a858 0 3px,#a87f3f 3px 6px);
+  clip-path:polygon(18% 0,82% 0,100% 100%,0 100%);box-shadow:0 3px 5px rgba(0,0,0,.4)}
+#broom.armed{transform:rotate(-26deg) translateY(-16px)}
+#broom.swing{animation:broomSwing .38s ease-in-out}
+@keyframes broomSwing{35%{transform:rotate(42deg) translateY(-8px)}70%{transform:rotate(-30deg) translateY(-16px)}}
+#broom.hintGlow{animation:hintP 1.1s infinite}
+
+#bagZone{position:absolute;right:4%;top:-70px;text-align:center;z-index:6;cursor:pointer}
 #bag{font-size:48px;display:block;filter:drop-shadow(2px 3px 3px rgba(0,0,0,.4))}
 #bagCount{font:700 13px 'PT Mono';color:#ffd97a;background:rgba(0,0,0,.45);padding:1px 9px;border-radius:8px}
 #bagCount.bump{animation:bump .3s}
 @keyframes bump{50%{transform:scale(1.4)}}
-#cashSpot{position:absolute;right:26%;top:-18px;display:flex;gap:9px;align-items:center;z-index:8;
-  flex-wrap:wrap;max-width:31%;justify-content:flex-end;transform-origin:bottom right}
+#cashSpot{position:absolute;right:24%;top:-18px;display:flex;gap:9px;align-items:center;z-index:8;
+  flex-wrap:wrap;max-width:33%;justify-content:flex-end;transform-origin:bottom right}
 #cashSpot .lbl{font:700 11px 'PT Sans';color:#ffe9b0;background:rgba(0,0,0,.55);padding:2px 9px;border-radius:8px}
 .hm{cursor:pointer;transition:transform .15s,filter .15s,opacity .25s;position:relative}
 .hm:hover{transform:translateY(-5px) rotate(0deg)!important;filter:brightness(1.12) drop-shadow(0 0 7px rgba(255,217,122,.85))}
 .hm:active{transform:scale(.82)!important}
 .hm.wait{animation:hmPulse 1.7s infinite}
+.hm.sus{filter:saturate(.7) brightness(1.07)}
+.hm.sus:hover{filter:saturate(.7) brightness(1.18) drop-shadow(0 0 7px rgba(255,217,122,.85))}
 @keyframes hmPulse{50%{filter:drop-shadow(0 0 8px rgba(255,217,122,.8))}}
 .hm.gone{transform:scale(0) rotate(20deg)!important;opacity:0}
 
@@ -282,7 +360,7 @@ button{touch-action:manipulation;font-family:inherit}
 .coin.mini{width:25px;height:25px;font-size:10px;border-width:1.5px}
 .cash.pop,.coin.pop{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
 .ghost{position:fixed;z-index:99;pointer-events:none;margin:0;
-  transition:transform .45s cubic-bezier(.3,.7,.4,1),opacity .45s}
+  transition:transform .4s cubic-bezier(.3,.7,.4,1),opacity .4s}
 
 /* ================= СТОЛ С КАССОЙ ================= */
 #deck{position:relative;z-index:20;padding:24px 20px 30px;display:flex;gap:24px;justify-content:center;
@@ -318,7 +396,7 @@ button{touch-action:manipulation;font-family:inherit}
 .roll.r1{bottom:0;left:0;transform:rotate(-5deg)}
 .roll.r2{bottom:16px;left:8px;transform:rotate(7deg)}
 
-#register{width:min(920px,95vw);background:linear-gradient(#dbd5c7,#bcb5a3);border-radius:16px 16px 10px 10px;
+#register{width:min(760px,95vw);background:linear-gradient(#dbd5c7,#bcb5a3);border-radius:16px 16px 10px 10px;
   padding:14px 16px 18px;position:relative;
   box-shadow:0 16px 36px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.65),inset 0 -6px 0 #948c78;
   background-image:radial-gradient(circle 3px at 13px 13px,#8a8270 40%,transparent 41%),
@@ -351,7 +429,6 @@ button{touch-action:manipulation;font-family:inherit}
 .led.r.on{background:#ff4a3a;box-shadow:0 0 10px rgba(255,74,58,.95)}
 @keyframes pulse{50%{opacity:.55}}
 
-/* принтер */
 #printer{width:190px;position:relative;height:92px;background:linear-gradient(#cbc4b4,#a9a190);
   border-radius:8px;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 #8a8270;cursor:pointer;
   transition:filter .12s}
@@ -374,7 +451,6 @@ button{touch-action:manipulation;font-family:inherit}
   background:repeating-conic-gradient(#1a1a1a 0 25%,#fdfdf6 0 50%);background-size:8px 8px}
 #paper .qrn{text-align:center;font-size:7px;letter-spacing:2px}
 
-/* служебная панель */
 #kbStrip{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;margin-bottom:11px}
 .k-strip{min-height:32px;border:none;border-radius:5px;cursor:pointer;position:relative;
   font:700 9.5px 'PT Mono';letter-spacing:.5px;color:#dfe3e8;
@@ -385,34 +461,21 @@ button{touch-action:manipulation;font-family:inherit}
 .k-strip:active{transform:translateY(3px);box-shadow:0 0 0 #26292e,inset 0 1px 0 rgba(255,255,255,.2)}
 .k-strip.shake{animation:shakeX .3s}
 
-/* клавиши: большое товарное поле + нижний ряд */
-#keys{display:flex;flex-direction:column;gap:10px}
-#kbProd{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr);gap:6px}
-#kbRow2{display:grid;gap:10px;grid-template-columns:auto 202px;grid-template-areas:"num fn" "num itog"}
-#kbNum{grid-area:num;display:grid;grid-template-columns:repeat(3,70px);grid-template-rows:repeat(4,1fr);gap:7px}
+#keys{display:grid;gap:10px;grid-template-columns:1fr 198px;grid-template-areas:"num fn" "num itog"}
+#kbNum{grid-area:num;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:7px}
 #kbFn{grid-area:fn;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);gap:7px}
 #keyItog{grid-area:itog;height:62px;font-size:19px;letter-spacing:5px;font-family:'Russo One';overflow:hidden}
 #keyItog::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;
   background:linear-gradient(105deg,transparent,rgba(255,255,255,.35),transparent);animation:sheen 4.5s infinite}
 @keyframes sheen{0%,55%{left:-60%}85%,100%{left:130%}}
-.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:38px;
+.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:48px;
   background:linear-gradient(#f6f1e3,#ddd6c2);color:#3a3428;
   box-shadow:0 4px 0 #9a927c,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 #fff;
   transition:filter .08s,transform .06s,box-shadow .06s;
   display:flex;flex-direction:column;align-items:center;justify-content:center}
 .key:hover{filter:brightness(1.07)}
 .key:active{transform:translateY(4px);box-shadow:0 0 0 #9a927c,0 1px 2px rgba(0,0,0,.2),inset 0 1px 0 #fff}
-.k-prod{padding-top:5px}
-.k-prod::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--pc,#888);
-  border-radius:7px 7px 0 0;opacity:.92}
-.k-prod .prow{display:flex;align-items:center;gap:3px;max-width:100%}
-.k-prod .pi{font-size:13px;line-height:1}
-.k-prod b{font-size:8.5px;font-weight:700;letter-spacing:.1px;line-height:1.05;overflow:hidden;white-space:nowrap}
-.k-prod em{font-style:normal;font:700 9px 'PT Mono';color:#8a4a20;margin-top:1px}
-.k-prod i{position:absolute;top:7px;left:4px;font:700 7.5px 'PT Mono';font-style:normal;color:#fdfdf6;
-  background:#7a7260;border-radius:3px;padding:0 3px}
-#kbNum .key{font:700 22px 'PT Mono';min-height:50px}
-#kbFn .key{min-height:48px}
+#kbNum .key{font:700 24px 'PT Mono'}
 .k-slate{background:linear-gradient(#9aa3ad,#7c858f);color:#fff;box-shadow:0 4px 0 #565e68,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:.4px}
 .k-red{background:linear-gradient(#c85648,#a83a2e);color:#fff;box-shadow:0 4px 0 #6e2018,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:11.5px;font-weight:700;letter-spacing:.4px}
 .k-amber{background:linear-gradient(#e0aa4a,#c08a2a);color:#3a2a08;box-shadow:0 4px 0 #7a5610,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:11.5px;font-weight:700;letter-spacing:.4px}
@@ -462,7 +525,57 @@ button{touch-action:manipulation;font-family:inherit}
 #tCard b{font:700 9px 'PT Sans';color:rgba(255,255,255,.9);letter-spacing:.5px;display:block}
 #tCard span{font:italic 700 12px 'Russo One';color:#fff;position:absolute;right:8px;bottom:6px;opacity:.9}
 
-/* ================= ДЕНЕЖНЫЙ ЯЩИК ================= */
+/* ================= ДУЭЛЬ ================= */
+#duel{position:fixed;inset:0;z-index:70;display:none;flex-direction:column;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 3px,transparent 3px 160px),
+  linear-gradient(#33291f,#1a130d)}
+#duel.on{display:flex}
+.duelTop{display:flex;align-items:center;justify-content:center;gap:22px;padding:10px 16px;
+  background:linear-gradient(#26362c,#182420);border-bottom:3px solid #0c0a08;flex-wrap:wrap}
+.duelTop h2{font-family:'Russo One';font-size:19px;color:#e8c15a;letter-spacing:2px;text-shadow:0 0 12px rgba(232,193,90,.4)}
+.dscore{display:flex;align-items:center;gap:8px;font:700 14px 'PT Mono'}
+.dscore .nm{font-family:'Russo One';font-size:13px;letter-spacing:1px}
+.dscore.p1 .nm{color:#5fe0cc}.dscore.p2 .nm{color:#ffb066}
+.pip{width:13px;height:13px;border-radius:50%;background:#2a2e33;border:1px solid #4a4f56;transition:.2s}
+.pip.on1{background:#37c0aa;box-shadow:0 0 8px rgba(55,192,170,.8)}
+.pip.on2{background:#e0923f;box-shadow:0 0 8px rgba(224,146,63,.8)}
+#duelExit{background:#3a2626;border:1px solid #6a3a34;color:#e0b0a8;border-radius:6px;padding:6px 12px;
+  font:700 11px 'PT Sans';cursor:pointer;letter-spacing:1px}
+#duelExit:hover{background:#4a3030}
+.duelSides{flex:1;display:flex;gap:12px;padding:12px;min-height:0}
+.dside{flex:1;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;min-width:0;
+  background:#22302a;border:3px solid #37b0a0;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.dside.s2{border-color:#e0923f}
+.dside.win{animation:winFlash .7s}
+@keyframes winFlash{25%{box-shadow:0 0 50px rgba(125,255,155,.95);transform:scale(1.015)}}
+.ds-head{padding:7px 12px;font-family:'Russo One';font-size:13px;letter-spacing:2px;color:#0e1a16;
+  background:linear-gradient(#5fe0cc,#37b0a0);display:flex;justify-content:space-between;align-items:center}
+.dside.s2 .ds-head{background:linear-gradient(#ffb066,#e0923f)}
+.ds-head .dsc{font:700 13px 'PT Mono';color:#0e1a16}
+.ds-belt{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center;gap:10px;
+  padding:16px 10px 44px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+  background:linear-gradient(#2c443a,#22352c)}
+.ds-belt::-webkit-scrollbar{display:none}
+.ds-belt::before{content:'';position:absolute;left:6%;right:6%;bottom:24px;height:14px;border-radius:3px;
+  background:repeating-linear-gradient(45deg,#26282c 0 12px,#2e3136 12px 24px);border:2px solid #44484e}
+.ds-scanner{height:66px;background:linear-gradient(#22262c,#171a1f);display:flex;align-items:center;
+  justify-content:center;gap:12px;position:relative;box-shadow:inset 0 4px 8px rgba(0,0,0,.5)}
+.ds-win{width:130px;height:26px;border-radius:4px;background:linear-gradient(#241a44,#160f2c);
+  box-shadow:inset 0 0 8px rgba(120,80,220,.4);transition:.12s;position:relative;overflow:hidden}
+.ds-scanner.aim .ds-win{background:linear-gradient(#6a1210,#4a0f0a);
+  box-shadow:0 0 18px rgba(255,60,40,.85),inset 0 0 10px rgba(255,90,60,.8)}
+.ds-scanner.aim .ds-win::after{content:'';position:absolute;left:4px;right:4px;height:2px;background:#ff3a28;
+  box-shadow:0 0 8px rgba(255,60,40,.9);animation:laserScan .5s linear infinite}
+.ds-slbl{font:700 9px 'PT Sans';color:#7a828c;letter-spacing:2px}
+.ds-lcd{background:#0c160c;font:700 16px 'PT Mono';color:#7dff9b;text-align:center;padding:9px;
+  letter-spacing:1px;text-shadow:0 0 8px rgba(125,255,155,.6);border-top:2px solid #26221c}
+.ds-itog{margin:10px;padding:15px;font-family:'Russo One';font-size:17px;letter-spacing:4px;color:#fff;
+  background:linear-gradient(#4aa866,#2f7d48);border:none;border-radius:8px;cursor:pointer;
+  box-shadow:0 4px 0 #18482a;transition:.1s}
+.ds-itog:active{transform:translateY(3px)}
+.ds-itog.hint{animation:hintP 1s infinite}
+
+/* ================= ЯЩИК ================= */
 #drawer{position:fixed;left:0;right:0;bottom:0;z-index:60;transform:translateY(105%);
   transition:transform .45s cubic-bezier(.22,1,.36,1);background:linear-gradient(#c6cbd2,#8f959e);
   border-top:6px solid #dce0e6;box-shadow:0 -14px 40px rgba(0,0,0,.65)}
@@ -487,6 +600,13 @@ button{touch-action:manipulation;font-family:inherit}
 .slot .stack::before{transform:translate(3px,3px)}
 .slot .stack::after{transform:translate(6px,6px);opacity:.6}
 .slot .stack.coinstack::before,.slot .stack.coinstack::after{border-radius:50%}
+#inkPile{display:none;flex:1;min-width:360px;background:#22262b;border-radius:10px;padding:14px;
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.6)}
+#drawer.inkas #drMoney{display:none}
+#drawer.inkas #inkPile{display:flex;flex-wrap:wrap;gap:9px;align-items:center;align-content:flex-start}
+.pileB{display:inline-block;cursor:pointer;transition:transform .12s,filter .12s}
+.pileB:hover{transform:translateY(-4px) rotate(0deg)!important;filter:brightness(1.12) drop-shadow(0 0 6px rgba(255,217,122,.6))}
+.pileB:active{transform:scale(.85)!important}
 #drTray{width:340px;background:#1c2025;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;
   box-shadow:inset 0 4px 12px rgba(0,0,0,.6)}
 .tr-need{font:700 12px 'PT Sans';letter-spacing:1px;color:#9aa2ab}
@@ -517,15 +637,23 @@ button{touch-action:manipulation;font-family:inherit}
 .overlay{position:fixed;inset:0;z-index:100;background:rgba(10,8,6,.8);display:flex;align-items:center;
   justify-content:center;padding:18px;backdrop-filter:blur(2px);overflow-y:auto}
 .overlay.hidden{display:none}
-.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:620px;width:100%;padding:26px 32px;
+.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:640px;width:100%;padding:26px 32px;
   box-shadow:0 24px 60px rgba(0,0,0,.7),inset 0 0 0 2px #d8d0ba;position:relative;
   background-image:repeating-linear-gradient(0deg,transparent 0 26px,rgba(0,0,0,.03) 26px 27px);
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
 .card h1{font-family:'Russo One';font-size:23px;letter-spacing:1px;color:#8a3020;margin-bottom:4px}
 .card .sub{font:700 10.5px 'PT Sans';letter-spacing:3px;color:#8a8270;margin-bottom:16px}
-.card ol{margin:0 0 14px 20px;font-size:13.5px;line-height:1.6}
+.card ol{margin:0 0 14px 20px;font-size:13px;line-height:1.55}
 .card kbd{background:#26221c;color:#ffd97a;font:700 11px 'PT Mono';padding:2px 7px;border-radius:4px;
   box-shadow:0 2px 0 #000;margin:0 1px}
+.modeRow{display:flex;gap:12px;margin-bottom:16px}
+.modeBtn{flex:1;border:none;border-radius:8px;padding:16px 10px;cursor:pointer;color:#fff;
+  font-family:'Russo One';font-size:15px;letter-spacing:1px;transition:.12s;position:relative}
+.modeBtn small{display:block;font:700 10px 'PT Sans';letter-spacing:.5px;opacity:.85;margin-top:4px}
+.modeBtn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.modeBtn:active{transform:translateY(2px)}
+#modeSingle{background:linear-gradient(#4aa866,#2f7d48);box-shadow:0 5px 0 #18482a}
+#modeDuel{background:linear-gradient(#c07a2f,#96581c);box-shadow:0 5px 0 #5a3410}
 .stamp{position:absolute;top:14px;right:16px;width:90px;height:90px;border:3px double rgba(176,48,38,.55);
   border-radius:50%;transform:rotate(-13deg);display:flex;align-items:center;justify-content:center;
   text-align:center;font:700 8.5px/1.35 'PT Sans';letter-spacing:1px;color:rgba(176,48,38,.6);
@@ -540,17 +668,20 @@ button{touch-action:manipulation;font-family:inherit}
 .btnrow{display:flex;gap:10px}
 .btnrow .bigbtn{flex:1;font-size:13px;padding:12px}
 .bigbtn.grey{background:linear-gradient(#8a8f96,#5a5f66);box-shadow:0 5px 0 #33373c}
+.grade{font-family:'Russo One';font-size:72px;line-height:1;margin:8px 0}
+.grade.g5{color:#2f9d58}.grade.g4{color:#37b0a0}.grade.g3{color:#d09a2f}.grade.g2{color:#c84838}
 #zEndPaper{font-family:'PT Mono';background:#fdfdf6;margin:0 auto 16px;max-width:330px;padding:16px 18px;
   font-size:12px;line-height:1.7;color:#2a2620;box-shadow:0 8px 24px rgba(0,0,0,.35);text-align:left}
 #zEndPaper .pl{display:flex;justify-content:space-between}
 #zEndPaper .c{text-align:center}
 #zEndPaper .b{font-weight:700}
 #zEndPaper .sep{border-top:1px dashed #9a9488;margin:5px 0}
+#deWinner{font-family:'Russo One';font-size:30px;margin:10px 0;letter-spacing:2px}
+#deWinner.w1{color:#2f9d88}#deWinner.w2{color:#c07a2f}
 
-/* ---------- планшет / узкий десктоп ---------- */
 @media (max-width:1360px){
   .mug,.rolls,.scale{display:none}
-  #terminal{width:min(920px,95vw);display:flex;align-items:stretch;gap:10px;padding:10px 12px}
+  #terminal{width:min(760px,95vw);display:flex;align-items:stretch;gap:10px;padding:10px 12px}
   .t-top{display:none}
   .t-pad{margin:0 6px;align-self:center}
   #tScreen{flex:1;min-height:52px}
@@ -558,21 +689,21 @@ button{touch-action:manipulation;font-family:inherit}
   .t-slot{width:90px;height:auto;min-height:52px}
 }
 
-/* ---------- телефон ---------- */
 @media (max-width:720px){
   #hud{position:sticky;top:0;padding:6px 10px;gap:6px}
   .hud-brand{display:none}
   .hud-shift{font-size:9px}.hud-shift b{font-size:10px}
   #hClock{font-size:14px}
   .hud-right{gap:6px}
-  .hstat{padding:0 6px}.hstat i{font-size:7.5px}.hstat b{font-size:13px}
-  #scene{position:sticky;top:41px;z-index:40;flex:none;height:31vh;min-height:210px;
+  .hstat{padding:0 5px}.hstat i{font-size:7px}.hstat b{font-size:12px}
+  #rush,#examBar{top:46px;transform:translateX(-50%) scale(.82);transform-origin:top center}
+  #scene{position:sticky;top:41px;z-index:40;flex:none;height:32vh;min-height:215px;
     box-shadow:0 8px 18px rgba(0,0,0,.55)}
   .person{transform:scale(.62);transform-origin:bottom center}
-  .belt-item{transform:scale(.72);transform-origin:bottom center}
-  .belt-item:hover{transform:scale(.72)}
+  .belt-item{transform:scale(.74);transform-origin:bottom center}
+  .belt-item:hover{transform:scale(.74)}
   .belt-item.fly{transform:translate(110px,-24px) scale(.1)}
-  #beltItems{gap:5px}
+  #beltItems{gap:6px}
   .ticker{width:72%}
   .tk{font-size:9px}
   #sign{font-size:14px;letter-spacing:4px;padding:4px 12px 4px 16px;top:5%}
@@ -585,6 +716,10 @@ button{touch-action:manipulation;font-family:inherit}
   #counter::after{font-size:7.5px;right:12%}
   .cone{width:130px}#cone1{left:calc(22% - 63px)}#cone2{left:calc(64% - 63px)}
   #scanner{transform:scale(.85);transform-origin:bottom left}
+  #detector{transform:scale(.82);transform-origin:bottom right}
+  #dtActs{top:-64px;right:9%}
+  #broom{transform:scale(.8);transform-origin:bottom right}
+  #broom.armed{transform:scale(.8) rotate(-26deg) translateY(-16px)}
   #cashSpot{transform:scale(.85);transform-origin:bottom right;top:-14px}
   #deck{padding:12px 8px 18px;gap:10px}
   #regWrap{padding:9px 9px 11px;border-radius:14px;width:100%}
@@ -600,24 +735,22 @@ button{touch-action:manipulation;font-family:inherit}
   #paper{font-size:7.5px;line-height:1.4;padding:6px 5px 8px}
   #kbStrip{grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
   .k-strip{min-height:30px;font-size:8px}
-  #kbProd{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(10,1fr);gap:5px}
-  .k-prod{min-height:42px}
-  .k-prod .pi{font-size:11px}
-  .k-prod b{font-size:7.5px}
-  .k-prod em{font-size:8px}
-  .k-prod i{top:5px;left:3px;font-size:6.5px}
-  #kbRow2{grid-template-columns:1.15fr 1fr;grid-template-areas:"num fn" "itog itog";gap:6px}
-  #kbNum{grid-template-columns:repeat(3,1fr);gap:5px}
-  #kbNum .key{font-size:16px;min-height:44px}
-  #kbFn{grid-template-columns:repeat(2,1fr);gap:5px}
+  #keys{grid-template-columns:1.15fr 1fr;grid-template-areas:"num fn" "itog itog";gap:6px}
+  #kbNum{gap:5px}
+  #kbNum .key{font-size:17px;min-height:44px}
+  #kbFn{gap:5px}
   #kbFn .key{min-height:44px}
   .key{border-radius:6px}
   .k-slate,.k-red,.k-amber{font-size:8.5px}
   .k-teal,.k-blue{font-size:10px}
   #keyItog{height:54px;font-size:16px;letter-spacing:4px}
+  .duelSides{flex-direction:column;padding:8px;gap:8px}
+  .ds-belt{padding:10px 8px 36px}
+  .duelSides .belt-item{transform:scale(.72);transform-origin:bottom center}
+  .ds-itog{padding:10px;margin:8px}
   #drawer{max-height:84vh;overflow-y:auto}
   .dr-body{flex-direction:column;gap:10px;padding:6px 12px 14px}
-  #drMoney{min-width:0;padding:9px}
+  #drMoney,#inkPile{min-width:0;padding:9px}
   .slot{padding:5px 6px 4px}
   .cash.mini{width:44px;height:22px;font-size:10px}
   .coin.mini{width:22px;height:22px;font-size:9px}
@@ -625,8 +758,9 @@ button{touch-action:manipulation;font-family:inherit}
   .dr-head .hintline{display:none}
   #toast{top:auto;bottom:calc(84vh + 8px);font-size:12px}
   .card{padding:20px 18px}
-  .card ol{font-size:12.5px}
+  .card ol{font-size:12px}
   .stamp{width:72px;height:72px;font-size:7px}
+  .modeRow{flex-direction:column}
 }
 </style>
 </head>
@@ -640,20 +774,25 @@ button{touch-action:manipulation;font-family:inherit}
       <span id="hClock">00:00</span>
     </div>
     <div class="hud-right">
+      <div class="hstat"><i>БАЛАНС</i><b id="hBal">0 ₽</b></div>
       <div class="hstat"><i>ВЫРУЧКА</i><b id="hRev">0 ₽</b></div>
-      <div class="hstat"><i>ЧЕКОВ</i><b id="hChecks">0</b></div>
       <div class="hstat"><i>ЧАЕВЫЕ</i><b id="hTips">0 ₽</b></div>
-      <div class="hstat"><i>ОШИБКИ</i><b id="hErr">0</b></div>
+      <div class="hstat"><i>ШТРАФЫ</i><b id="hPen">0 ₽</b></div>
       <div class="hstat"><i>РЕЙТИНГ</i><b id="hStars">★ 5.0</b></div>
+      <button class="hbtn" id="btnExam" title="Аттестация (экзамен на скорость)">🎓</button>
+      <button class="hbtn" id="btnDuel" title="Дуэль кассиров">⚔</button>
       <button class="hbtn" id="btnMute" title="Звук">🔊</button>
       <button class="hbtn" id="btnHelp" title="Памятка">?</button>
     </div>
   </header>
 
+  <div id="rush"><b>⚡ ЧАС ПИК</b><div class="rb"><i id="rushFill"></i></div><span id="rushTxt"></span></div>
+  <div id="examBar"><b>🎓 АТТЕСТАЦИЯ</b><div class="rb"><i id="examFill"></i></div><span id="examTxt"></span></div>
+
   <main id="scene">
     <div class="ticker"><div class="tk">
-      <span>★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО · КАРТОФЕЛЬ · КОЛА ★ САЛО И КАРТОФЕЛЬ — НА ВЕС, ЧЕРЕЗ «ВЗВ» ★ АКЦИЯ −30% НА ВСЁ ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ ПЕЛЬМЕНИ «СИБИРСКИЕ» — 260 ₽</span>
-      <span>★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО · КАРТОФЕЛЬ · КОЛА ★ САЛО И КАРТОФЕЛЬ — НА ВЕС, ЧЕРЕЗ «ВЗВ» ★ АКЦИЯ −30% НА ВСЁ ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ ПЕЛЬМЕНИ «СИБИРСКИЕ» — 260 ₽</span>
+      <span>★ ОСТОРОЖНО: ФАЛЬШИВЫЕ КУПЮРЫ ★ ДЕБОШИРОВ ВЫПРОВОЖИВАЕМ МЕТЁЛКОЙ ★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО ★ САЛО И КАРТОФЕЛЬ — НА ВЕС ★ ТОВАРЫ ТАЩИМ ЧЕРЕЗ СКАНЕР ★</span>
+      <span>★ ОСТОРОЖНО: ФАЛЬШИВЫЕ КУПЮРЫ ★ ДЕБОШИРОВ ВЫПРОВОЖИВАЕМ МЕТЁЛКОЙ ★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО ★ САЛО И КАРТОФЕЛЬ — НА ВЕС ★ ТОВАРЫ ТАЩИМ ЧЕРЕЗ СКАНЕР ★</span>
     </div></div>
     <div class="shelf" id="shelfL"></div>
     <div class="shelf" id="shelfR"></div>
@@ -670,9 +809,13 @@ button{touch-action:manipulation;font-family:inherit}
     <div id="floor"></div>
     <div id="people"></div>
     <div id="counter">
+      <div id="scanZone"></div>
       <div id="scanner"><i class="sc-base"></i><i class="sc-body"></i><i class="sc-win"></i><i class="sc-led"></i></div>
       <div id="belt"></div>
       <div id="beltItems"></div>
+      <div id="detector"><i class="dt-body"><i class="dt-win"></i><i class="dt-led g"></i><i class="dt-led r"></i><span id="dtBill"></span></i><span class="dt-lbl">УФ·ИК</span></div>
+      <div id="dtActs"><button class="dt-btn ret" id="dtRet">↩ ВЕРНУТЬ</button><button class="dt-btn risk" id="dtRisk">В КАССУ ⚠</button></div>
+      <div id="broom" title="Метёлка — от дебоширов"></div>
       <div id="bagZone"><span id="bag">🛍️</span><span id="bagCount">0</span></div>
       <div id="cashSpot"></div>
     </div>
@@ -700,12 +843,9 @@ button{touch-action:manipulation;font-family:inherit}
         </div>
         <div id="kbStrip"></div>
         <div id="keys">
-          <div id="kbProd"></div>
-          <div id="kbRow2">
-            <div id="kbNum"></div>
-            <div id="kbFn"></div>
-            <button id="keyItog" class="key k-green" data-k="itog">ИТОГ</button>
-          </div>
+          <div id="kbNum"></div>
+          <div id="kbFn"></div>
+          <button id="keyItog" class="key k-green" data-k="itog">ИТОГ</button>
         </div>
       </div>
     </div>
@@ -722,13 +862,39 @@ button{touch-action:manipulation;font-family:inherit}
     </div>
   </section>
 
+  <div id="duel">
+    <div class="duelTop">
+      <div class="dscore p1"><span class="nm">ИГРОК 1</span><span id="pips0"></span></div>
+      <h2>⚔ ДУЭЛЬ КАССИРОВ</h2>
+      <div class="dscore p2"><span id="pips1"></span><span class="nm">ИГРОК 2</span></div>
+      <button id="duelExit">✕ В МЕНЮ</button>
+    </div>
+    <div class="duelSides">
+      <div class="dside s1" id="dside0">
+        <div class="ds-head"><span>ИГРОК 1 · ТЕБЕ ВЛЕВО</span><span class="dsc" id="dsc0">0/0</span></div>
+        <div class="ds-belt" id="dbelt0"></div>
+        <div class="ds-scanner" id="dscan0"><span class="ds-slbl">ТАЩИ СЮДА ↓</span><i class="ds-win"></i></div>
+        <div class="ds-lcd" id="dlcd0">0/0 · 0 ₽</div>
+        <button class="ds-itog" id="ditog0">ИТОГ</button>
+      </div>
+      <div class="dside s2" id="dside1">
+        <div class="ds-head"><span>ИГРОК 2 · ТЕБЕ ВПРАВО</span><span class="dsc" id="dsc1">0/0</span></div>
+        <div class="ds-belt" id="dbelt1"></div>
+        <div class="ds-scanner" id="dscan1"><span class="ds-slbl">ТАЩИ СЮДА ↓</span><i class="ds-win"></i></div>
+        <div class="ds-lcd" id="dlcd1">0/0 · 0 ₽</div>
+        <button class="ds-itog" id="ditog1">ИТОГ</button>
+      </div>
+    </div>
+  </div>
+
   <div id="drawer">
-    <div class="dr-head">ДЕНЕЖНЫЙ ЯЩИК · ДЯ-2М
-      <span class="hintline">кликайте по купюрам и монетам, чтобы собрать сдачу</span>
+    <div class="dr-head"><span id="drTitle">ДЕНЕЖНЫЙ ЯЩИК · ДЯ-2М</span>
+      <span class="hintline" id="drHint">кликайте по купюрам и монетам, чтобы собрать сдачу</span>
       <button id="drLock" title="Запереть ящик">🔒</button>
     </div>
     <div class="dr-body">
       <div id="drMoney"></div>
+      <div id="inkPile"></div>
       <div id="drTray">
         <div class="tr-need"><span id="trNeedLbl">СДАЧА:</span> <b id="trNeed">0</b> ₽</div>
         <div id="trItems"></div>
@@ -747,25 +913,26 @@ button{touch-action:manipulation;font-family:inherit}
   <div class="overlay" id="intro">
     <div class="card">
       <div class="stamp">Продукты №7<br>утверждаю<br>директор</div>
-      <h1>ПАМЯТКА КАССИРА</h1>
-      <div class="sub">ККМ «ЭЛЕКТРОН-95» · 40 ТОВАРОВ · ВСЁ НАЖИМАЕТСЯ</div>
+      <h1>ПАМЯТКА КАССИРА 2.0</h1>
+      <div class="sub">ЭЛЕКТРОН-95 · 40 ТОВАРОВ · МЕТЁЛКА ЗАРЯЖЕНА</div>
+      <div class="modeRow">
+        <button class="modeBtn" id="modeSingle">🧍 <span id="msLbl">НАЧАТЬ СМЕНУ</span><small>зарплата · штрафы · аттестация</small></button>
+        <button class="modeBtn" id="modeDuel">⚔ ДУЭЛЬ КАССИРОВ<small>два игрока на одном экране · до 5 побед</small></button>
+      </div>
       <ol>
-        <li><b>Скан:</b> клик по товару на ленте. Штрих-код <b>перечёркнут</b>? Вбейте вручную клавишей по PLU.</li>
-        <li><b>Весовое</b> (яблоки, курица, <b>сало, картошка</b>…): сначала <kbd>ВЗВ</kbd> — весы покажут вес, затем клавиша товара.</li>
-        <li>Количество — <kbd>цифра</kbd>+клавиша. <kbd>ЦЕНА</kbd> — своя цена, <kbd>КОР</kbd> — правка количества, <kbd>ПИ</kbd> — поиск по PLU, <kbd>СЕКЦ</kbd> — секция, <kbd>КЧ</kbd> — копия чека, <kbd>РЕЖ</kbd> — подсветка, <kbd>ДЯЩИК</kbd> — ящик в любой момент.</li>
-        <li>Всё вбито — <kbd>ИТОГ</kbd>. <b>Карта:</b> <kbd>КАРТА</kbd> → <kbd>ВВОД</kbd> (пин-пад клиент наберёт сам). <b>Наличные:</b> заберите деньги с прилавка кликами, затем сдача из ящика → <kbd>ОТДАТЬ</kbd>.</li>
-        <li><b>Возврат:</b> пробейте товар, <kbd>ИТОГ</kbd>, <kbd>НАЛ</kbd> — и выдайте сумму из ящика.</li>
-        <li>Всё живое: клик по <b>принтеру</b> — тест печати, по <b>весам</b> — тара, по <b>покупателю</b> — реакция, 🔒 — запирает ящик.</li>
-        <li><kbd>АННУЛ</kbd> — весь чек, <kbd>Z</kbd> — закрыть смену.</li>
+        <li><b>Хватай товар и тащи через сканер.</b> Штрих-код порван? Набери ПЛУ на цифрах и жми <kbd>ПЛУ⏎</kbd>.</li>
+        <li><b>Весовое</b> (сало, картошка, курица…) — сначала <kbd>ВЗВ</kbd>. Количество — <kbd>цифра</kbd> + тащи/ПЛУ.</li>
+        <li><b>Наличные:</b> купюры проходят УФ-детектор — красная лампа = фальшивка, верни клиенту. Сдачу собирай из ящика.</li>
+        <li><b>Дебошир</b> не платит и бесит очередь: хватай <b>метёлку</b> (справа) и кликни по нему. Оклад 1200₽/смена, штрафы копятся.</li>
+        <li><kbd>ИТОГ</kbd> · <kbd>АННУЛ</kbd> — весь чек · <kbd>Z</kbd> — закрыть смену и сдать выручку инкассатору. <b>🎓</b> — экзамен на скорость.</li>
       </ol>
-      <button class="bigbtn" id="introStart">ПРИСТУПИТЬ К СМЕНЕ</button>
     </div>
   </div>
 
   <div class="overlay hidden" id="zConf">
     <div class="card small">
       <h1>ЗАКРЫТЬ СМЕНУ?</h1>
-      <p>Будет напечатан Z-отчёт, касса обнулится.<br>Покупатели разойдутся по домам.</p>
+      <p>Z-отчёт, пересчёт выручки для инкассатора<br>и расчётный листок с зарплатой.</p>
       <div class="btnrow">
         <button class="bigbtn grey" id="zNo">РАБОТАТЬ</button>
         <button class="bigbtn" id="zYes">ЗАКРЫТЬ</button>
@@ -782,6 +949,27 @@ button{touch-action:manipulation;font-family:inherit}
     </div>
   </div>
 
+  <div class="overlay hidden" id="examEnd">
+    <div class="card small">
+      <h1>АТТЕСТАЦИЯ ПРОЙДЕНА</h1>
+      <div class="grade" id="exGrade">5</div>
+      <p id="exTxt">Товаров за 60 секунд: 0 · Премия +0 ₽</p>
+      <button class="bigbtn" id="exOk">К РАБОТЕ ▸</button>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="duelEnd">
+    <div class="card small">
+      <h1>ДУЭЛЬ ОКОНЧЕНА</h1>
+      <div id="deWinner" class="w1">ПОБЕДИЛ ИГРОК 1</div>
+      <p id="deScore">5 : 3</p>
+      <div class="btnrow">
+        <button class="bigbtn" id="deAgain">РЕВАНШ</button>
+        <button class="bigbtn grey" id="deMenu">В МЕНЮ</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -789,6 +977,8 @@ button{touch-action:manipulation;font-family:inherit}
 const $=s=>document.querySelector(s);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const ean=id=>'460'+String(id).padStart(4,'0')+((id*7)%10);
 
 /* ---------- данные ---------- */
 const PRODUCTS=[
@@ -825,19 +1015,25 @@ const THANKS=['Спасибо!','Всего доброго!','Хорошего �
 const NOPE=['Это не моё!','Я такое не брал(а)!','Ошибочка, у меня этого нет','Лишнее! Отмените'];
 const NAG=['Долго ещё?','Я тороплюсь...','Можно побыстрее?','Что так медленно?'];
 const REACT=['Да-да?','Что-то не так?','Я слушаю','М-м?','Уже можно подходить?','Ой!'];
+const ROWDY_SAY=['Я НЕ БУДУ ПЛАТИТЬ!','ГДЕ МОИ ДЕНЬГИ?!','ВСЁ БЕСПЛАТНО СЕГОДНЯ!','ОТОЙДИ ОТ КАССЫ!'];
 const SHIRTS=['#b85c48','#4a7a9e','#6a9a4f','#9a6ab0','#c09a3f','#5a8a8a','#a05a78','#7a7a52'];
 const HAIRS=['#3a2a1a','#1e1a16','#6a4a2a','#8a8a82','#5a3a3a','#c0a050'];
 const SKINS=['#f3c9a6','#e8b48c','#d9a077','#c98a62'];
 const BANKS=['#1f6f4f','#8f3f5f','#2f5f9f','#b0782f','#5a3a8f'];
 
 /* ---------- состояние ---------- */
-const G={state:'BOOT',shift:142,revenue:0,cashRev:0,cardRev:0,tips:0,checks:0,errors:0,rating:5,
+const G={state:'BOOT',shift:142,balance:0,revenue:0,cashRev:0,cardRev:0,tips:0,pen:0,checks:0,errors:0,rating:5,
   customer:null,queue:[],belt:[],receipt:[],qtyBuf:null,handed:[],collected:0,taken:0,
   tray:[],changeDue:0,payMethod:null,printerBusy:false,muted:false,errorsThis:0,changeErr:0,
   svcStart:0,shiftStart:0,bagN:0,
   section:1,secTotals:{1:0,2:0,3:0},returns:0,retSum:0,isReturn:false,
   priceMode:false,priceBuf:null,korMode:false,korQty:null,piMode:false,piBuf:'',
-  scaleLine:null,lastPaper:null};
+  scaleLine:null,lastPaper:null,
+  rush:{active:false,endsAt:0,target:0,earned:0},
+  fakeIdx:-1,fakeTaken:0,checking:false,fakePending:false,
+  inkas:null,inkBonus:0,broomArmed:false,
+  exam:{active:false,score:0,endsAt:0},
+  duel:{active:false,scores:[0,0],lists:[[],[]],done:[false,false],over:false,n:0}};
 const cur=()=>G.customer;
 const lineAmt=l=>{const u=l.price??prod(l.pid).price;return l.w?Math.round(u*l.w):u*l.qty};
 const total=()=>G.receipt.reduce((s,l)=>s+lineAmt(l),0);
@@ -856,6 +1052,7 @@ const sfx={
  scan:()=>{tone(1568,.05,'square',.09);tone(2093,.07,'square',.07,.06)},
  scanFail:()=>{tone(220,.12,'sawtooth',.12);tone(180,.16,'sawtooth',.1,.09)},
  beep:()=>tone(880,.09,'sine',.12),
+ ok:()=>tone(1400,.06,'sine',.08),
  soft:()=>tone(300,.07,'square',.06),
  err:()=>{tone(170,.22,'sawtooth',.15);tone(120,.26,'sawtooth',.11,.05)},
  cash:()=>tone(1900,.05,'triangle',.09),
@@ -865,7 +1062,10 @@ const sfx={
  angry:()=>{tone(220,.18,'sawtooth',.13);tone(150,.3,'sawtooth',.13,.15)},
  card:()=>{tone(1046,.09,'sine',.11);tone(1568,.14,'sine',.09,.1)},
  scale:()=>{tone(600,.1,'sine',.08);tone(900,.12,'sine',.07,.09)},
- pin:()=>tone(760,.06,'square',.07),
+ alarm:()=>{tone(880,.12,'square',.1);tone(660,.12,'square',.1,.15);tone(880,.12,'square',.1,.3)},
+ fake:()=>{tone(200,.3,'sawtooth',.14);tone(150,.35,'sawtooth',.12,.1)},
+ broom:()=>{tone(300,.14,'sawtooth',.12,0,900);tone(140,.22,'sawtooth',.12,.1)},
+ fanfare:()=>{tone(660,.1,'square',.1);tone(880,.1,'square',.1,.11);tone(1320,.22,'square',.1,.22)},
  tear:()=>tone(2800,.06,'sawtooth',.05)};
 
 /* ---------- утилиты UI ---------- */
@@ -873,18 +1073,17 @@ function lcd(a,b){$('#lcd1').textContent=a;$('#lcd2').textContent=b}
 function lcdErr(){$('#lcd').classList.add('err');setTimeout(()=>$('#lcd').classList.remove('err'),550)}
 function shakeReg(){const r=$('#register');r.classList.remove('shake');void r.offsetWidth;r.classList.add('shake')}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');
- clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1900)}
+ clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),2100)}
 function flashLED(){$('#ledErr').classList.add('on');setTimeout(()=>$('#ledErr').classList.remove('on'),650)}
 function hint(k,on){const el=document.querySelector(`[data-k="${k}"]`);if(el)el.classList.toggle('hint',on)}
 function clearHints(){document.querySelectorAll('.key.hint').forEach(e=>e.classList.remove('hint'))}
 function clearModes(){G.priceMode=false;G.priceBuf=null;G.korMode=false;G.korQty=null;G.piMode=false;G.piBuf=''}
 function shakeKey(k){const el=document.querySelector(`[data-k="${k}"]`);if(!el)return;
  el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
-function flashKey(k){const el=document.querySelector(`[data-k="${k}"]`);if(!el)return;
- el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
-function updHUD(){$('#hRev').textContent=G.revenue.toLocaleString('ru-RU')+' ₽';
- $('#hChecks').textContent=G.checks;$('#hTips').textContent=G.tips+' ₽';
- $('#hErr').textContent=G.errors;$('#hStars').textContent='★ '+G.rating.toFixed(1)}
+function updHUD(){$('#hBal').textContent=G.balance.toLocaleString('ru-RU')+' ₽';
+ $('#hRev').textContent=G.revenue.toLocaleString('ru-RU')+' ₽';
+ $('#hTips').textContent=G.tips+' ₽';$('#hPen').textContent=G.pen+' ₽';
+ $('#hErr');$('#hStars').textContent='★ '+G.rating.toFixed(1)}
 function say(c,txt,ms=2400){if(!c||!c.el)return;const b=c.el.querySelector('.p-bub');
  b.textContent=txt;b.classList.add('show');clearTimeout(b._tm);
  b._tm=setTimeout(()=>b.classList.remove('show'),ms)}
@@ -903,6 +1102,45 @@ function flyTo(fromEl,targetSel,html){const r=fromEl.getBoundingClientRect(),t=$
 function cashHTML(d,cls){const c=d>=50?'cash':'coin';const col=d>=50?BC[d]:CC[d];
  return `<span class="${c}${cls?' '+cls:''}" style="--bc:${col}">${d}</span>`}
 
+/* ---------- перетаскивание ---------- */
+function overRect(el,x,y,pad=16){const r=el.getBoundingClientRect();
+ return x>r.left-pad&&x<r.right+pad&&y>r.top-pad&&y<r.bottom+pad}
+function makeDraggable(el,scannerEl,canDrag,onScan){
+ el.addEventListener('pointerdown',e=>{
+  if(!canDrag()){return}
+  e.preventDefault();
+  const r=el.getBoundingClientRect();
+  const ghost=el.cloneNode(true);
+  ghost.classList.add('dragGhost');ghost.classList.remove('lifting','flash');
+  ghost.style.width=r.width+'px';ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';
+  document.body.appendChild(ghost);
+  el.classList.add('lifting');
+  try{el.setPointerCapture(e.pointerId)}catch(err){}
+  el._drag={ghost,pid:+el.dataset.pid};
+  scannerEl.classList.toggle('aim',overRect(scannerEl,e.clientX,e.clientY));
+ });
+ el.addEventListener('pointermove',e=>{
+  if(!el._drag)return;
+  el._drag.ghost.style.left=e.clientX+'px';el._drag.ghost.style.top=e.clientY+'px';
+  scannerEl.classList.toggle('aim',overRect(scannerEl,e.clientX,e.clientY));
+ });
+ const finish=e=>{
+  if(!el._drag)return;
+  const d=el._drag;el._drag=null;
+  const over=overRect(scannerEl,e.clientX,e.clientY);
+  scannerEl.classList.remove('aim');
+  if(over){d.ghost.remove();el.classList.remove('lifting');onScan(d.pid,el);}
+  else{
+   const r=el.getBoundingClientRect();
+   d.ghost.style.transition='left .25s ease,top .25s ease,opacity .25s ease';
+   d.ghost.style.left=(r.left+r.width/2)+'px';d.ghost.style.top=(r.top+r.height/2)+'px';
+   d.ghost.style.opacity='0';
+   setTimeout(()=>{d.ghost.remove();el.classList.remove('lifting')},260);
+  }};
+ el.addEventListener('pointerup',finish);
+ el.addEventListener('pointercancel',e=>{if(el._drag){el._drag.ghost.remove();el._drag=null;
+  scannerEl.classList.remove('aim');el.classList.remove('lifting')}});}
+
 /* ---------- построение ---------- */
 function buildShelves(){['#shelfL','#shelfR'].forEach(id=>{const s=$(id);
  const cols=['#a85a3a','#4a7a5a','#7a4a3a','#b08a3f','#5a6a9a','#8a3a4a','#3f7f7f','#9a7a3f','#6a4a7a','#8a4a6a'];
@@ -912,20 +1150,17 @@ function buildShelves(){['#shelfL','#shelfR'].forEach(id=>{const s=$(id);
    b.style.background=pick(cols);row.appendChild(b);x+=w+3;}
   s.appendChild(row);}})}
 function buildKeys(){
- $('#kbProd').innerHTML=PRODUCTS.map(p=>
-  `<button class="key k-prod" data-k="p${p.id}" style="--pc:${p.pc}"><i>${p.id}</i><span class="prow"><span class="pi">${p.icon}</span><b>${p.name}</b></span><em>${p.price}₽${isWeight(p.id)?'/КГ':''}</em></button>`).join('');
  $('#kbNum').innerHTML=['7','8','9','4','5','6','1','2','3','0','00','C'].map(d=>
   `<button class="key${d==='C'?' k-red':''}" data-k="d${d}">${d}</button>`).join('');
  const FN=[['kolvo','КОЛ-ВО','k-slate'],['cancel','ОТМЕНА','k-red'],['price','ЦЕНА','k-slate'],
   ['drawer','ДЯЩИК','k-amber'],['nal','НАЛ','k-teal'],['card','КАРТА','k-blue'],
   ['x','X-ОТЧЁТ','k-dark'],['z','Z-ОТЧЁТ','k-dark']];
  $('#kbFn').innerHTML=FN.map(f=>`<button class="key ${f[2]}" data-k="${f[0]}">${f[1]}</button>`).join('');
- const STRIP=[['rezh','РЕЖ'],['sekc','СЕКЦ'],['pi','ПИ'],['kor','КОР'],
-  ['anull','АННУЛ'],['vzv','ВЗВ'],['search','ПОИСК'],['kch','КЧ']];
+ const STRIP=[['pi','ПЛУ⏎'],['kor','КОР'],['anull','АННУЛ'],['vzv','ВЗВ'],
+  ['sekc','СЕКЦ'],['rezh','РЕЖ'],['kch','КЧ'],['search','ПОИСК']];
  $('#kbStrip').innerHTML=STRIP.map(f=>`<button class="k-strip" data-k="${f[0]}">${f[1]}</button>`).join('');
  const click=e=>{const b=e.target.closest('[data-k]');if(!b)return;sfx.key();handleKey(b.dataset.k)};
  $('#keys').addEventListener('click',click);$('#kbStrip').addEventListener('click',click);
- // пин-пад
  const pad=$('#tPad');
  ['1','2','3','4','5','6','7','8','9','✕','0','✓'].forEach(n=>{
   const b=document.createElement('button');b.type='button';b.className='t-dot';b.textContent=n;pad.appendChild(b)});
@@ -944,7 +1179,11 @@ function buildDrawer(){
   if(G.state!=='CASH_CHANGE'){sfx.soft();return}
   const d=+s.dataset.d;G.tray.push(d);d>=50?sfx.cash():sfx.coin();
   flyTo(s,'#trItems',cashHTML(d,'mini'));
-  setTimeout(renderTray,360);});}
+  setTimeout(renderTray,360);});
+ $('#inkPile').addEventListener('click',e=>{const p=e.target.closest('.pileB');if(!p)return;
+  if(G.state!=='INKAS')return;
+  const i=+p.dataset.i;G.inkas.pile[i].taken=true;G.inkas.bag.push(G.inkas.pile[i].d);
+  sfx.cash();renderPile();renderTray();});}
 
 /* ---------- интерактив сцены ---------- */
 $('#printer').addEventListener('click',()=>{
@@ -961,33 +1200,105 @@ $('#bagZone').addEventListener('click',()=>{tone(340,.05,'triangle',.07);
 document.querySelector('.mug').addEventListener('click',()=>{tone(520,.08,'sine',.07);
  toast(pick(['Кофе уже холодный...','Пятиминутка через час!','Это кружка завмага!']))});
 
+/* ---------- метёлка ---------- */
+$('#broom').addEventListener('click',e=>{e.stopPropagation();
+ G.broomArmed=!G.broomArmed;
+ $('#broom').classList.toggle('armed',G.broomArmed);
+ $('#broom').classList.remove('hintGlow');
+ sfx.key();
+ toast(G.broomArmed?'🧹 Метёлка в руках! Кликните по дебоширу':'Метёлка на месте')});
+function expelRowdy(c){
+ G.broomArmed=false;$('#broom').classList.remove('armed');
+ const br=$('#broom');br.classList.add('swing');setTimeout(()=>br.classList.remove('swing'),400);
+ sfx.broom();
+ say(c,'АЙ! Ладно-ладно, ухожу!',1600);
+ G.rating=Math.min(5,G.rating+.2);updHUD();
+ toast('🧹 Дебошир выдворен! Рейтинг +0,2');
+ c.el.classList.add('expelled');
+ setTimeout(()=>{c.el.style.left='115%';setTimeout(()=>c.el.remove(),600)},150);
+ G.belt=[];G.receipt=[];$('#beltItems').innerHTML='';$('#ledCheck').classList.remove('on');
+ G.state='IDLE';G.customer=null;lcd('КАССА ГОТОВА','0.00');
+ setTimeout(serveNext,1100)}
+
+/* ---------- детектор банкнот ---------- */
+function detReset(){$('#detector').className='';$('#dtBill').innerHTML='';$('#dtActs').classList.remove('on');
+ G.checking=false;G.fakePending=false}
+function detCheck(el,d,idx){
+ G.checking=true;const det=$('#detector');
+ det.className='check';
+ setTimeout(()=>{
+  if(idx===G.fakeIdx){
+   det.className='bad';sfx.fake();flashLED();
+   $('#dtBill').innerHTML=cashHTML(d,'mini');
+   $('#dtActs').classList.add('on');
+   G.fakePending=true;G.checking=false;
+   toast('⚠ Купюра '+d+' ₽ не проходит проверку!');
+   const c=cur();if(c)say(c,'Что-то не так?..');
+  }else{
+   det.className='ok';sfx.ok();
+   el.classList.add('gone');
+   flyTo(el,'#lcd',el.innerHTML);
+   setTimeout(()=>el.remove(),260);
+   G.collected+=d;G.taken++;
+   lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО ${G.collected} ИЗ ${handedSum()}`);
+   setTimeout(()=>{det.className='';G.checking=false},320);
+   if(G.taken===G.handed.length)setTimeout(finishCollect,520);
+  }},300)}
+$('#dtRet').addEventListener('click',()=>{
+ sfx.key();const d=G.fakePending?G.handed[G.fakeIdx]:0;
+ detReset();G.fakeIdx=-1;
+ G.rating=Math.min(5,G.rating+.05);updHUD();
+ const c=cur();if(c)say(c,'Ой... извините! Вот настоящая, проверьте');
+ toast('Фальшивка возвращена клиенту (+рейтинг)');
+ const s=$('#cashSpot');const w=document.createElement('span');
+ w.className='hm wait';w.dataset.i='-1';w.style.transform=`rotate(${rnd(-7,7)}deg)`;
+ w.innerHTML=cashHTML(d,'mid');s.appendChild(w);});
+$('#dtRisk').addEventListener('click',()=>{
+ sfx.key();const d=G.handed[G.fakeIdx];
+ detReset();
+ G.collected+=d;G.taken++;G.fakeTaken+=d;
+ flyTo($('#detector'),'#lcd',cashHTML(d,'mid'));
+ toast('Рискованно... касса приняла '+d+' ₽');
+ lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО ${G.collected} ИЗ ${handedSum()}`);
+ if(G.taken===G.handed.length)setTimeout(finishCollect,520);});
+
 /* ---------- покупатели ---------- */
-const COUNTER_X=23, SLOTS=[42,57,72];
+const COUNTER_X=23, SLOTS=[42,57,72,87];
 function makeCustomer(){
  const r=Math.random();
- const type=r<.40?'regular':r<.58?'hurry':r<.78?'babushka':r<.92?'big':'return';
+ const rowdyP=Math.min(.12,.05+G.shift*.006);
+ let type;
+ if(G.rush.active)type=r<.5?'hurry':r<.85?'regular':'big';
+ else if(r<rowdyP)type='rowdy';
+ else type=r<.40?'regular':r<.58?'hurry':r<.78?'babushka':r<.92?'big':'return';
  const c={type,name:pick(NAMES),pat:100,nag1:false,nag2:false,
-  patMax:type==='hurry'?40:type==='regular'?65:type==='babushka'?85:type==='return'?75:78,
-  pay:type==='return'?'cash':((type==='babushka'?Math.random()<.75:Math.random()<.5)?'cash':'card')};
- const skin=pick(SKINS),hc=pick(HAIRS),sh=pick(SHIRTS);
+  patMax:type==='hurry'?40:type==='regular'?65:type==='babushka'?85:type==='return'?75:type==='rowdy'?32:78,
+  pay:type==='return'||type==='rowdy'?'cash':((type==='babushka'?Math.random()<.75:Math.random()<.5)?'cash':'card')};
+ const skin=pick(SKINS),hc=pick(HAIRS),sh=type==='rowdy'?'#8a2620':pick(SHIRTS);
  let hair='';
  if(type==='babushka')hair=`<div class="p-hair h-scarf" style="--hc:${pick(['#8a3a4a','#4a5a8a','#6a7a3a'])}"></div>`;
- else if(type==='hurry'&&Math.random()<.5)hair=`<div class="p-hair h-cap" style="--hc:${pick(HAIRS)}"></div>`;
+ else if((type==='hurry'||type==='rowdy')&&Math.random()<.6)hair=`<div class="p-hair h-cap" style="--hc:${pick(HAIRS)}"></div>`;
  else{const h=pick(['h-short','h-long','h-short','none']);
   if(h!=='none')hair=`<div class="p-hair ${h}" style="--hc:${hc}"></div>`}
  const glasses=Math.random()<.25?'<span class="p-glasses"></span>':'';
- const must=Math.random()<.25?'<span class="p-must" style="--hc:'+hc+'"></span>':'';
- const el=document.createElement('div');el.className='person mood-flat';
+ const must=Math.random()<.3?'<span class="p-must" style="--hc:'+hc+'"></span>':'';
+ const el=document.createElement('div');el.className='person mood-flat'+(type==='rowdy'?' rowdy mood-angry':'');
  el.innerHTML=`<div class="p-bub"></div><div class="p-in">
   <div class="p-bar"><div class="p-fill"></div></div>
   <div class="p-head" style="--skin:${skin}">${hair}<span class="p-brow l"></span><span class="p-brow r"></span><span class="p-eye l"></span><span class="p-eye r"></span>${glasses}${must}<span class="p-cheek l"></span><span class="p-cheek r"></span><span class="p-mouth"></span></div>
   <div class="p-neck" style="--skin:${skin}"></div>
   <div class="p-body" style="--sh:${sh}"><span class="p-arm l" style="--sh:${sh}"></span><span class="p-arm r" style="--sh:${sh}"></span><span class="p-tag">${c.name}</span></div></div>`;
- el.addEventListener('click',()=>{say(c,pick(REACT),1400);tone(500,.05,'sine',.05)});
+ el.addEventListener('click',()=>{
+  if(G.broomArmed){
+   if(c.type==='rowdy'&&G.customer===c){expelRowdy(c)}
+   else{sfx.soft();G.broomArmed=false;$('#broom').classList.remove('armed');
+    toast('Метёлка не для мирных покупателей!')}}
+  else{say(c,pick(REACT),1400);tone(500,.05,'sine',.05)}});
  el.style.left='-14%';$('#people').appendChild(el);c.el=el;return c}
-function ensureQueue(){while(G.queue.length<3){const c=makeCustomer();G.queue.push(c);
- const i=G.queue.length-1;requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  c.el.style.left=SLOTS[i]+'%'}));}}
+function ensureQueue(){const max=G.rush.active?4:3;
+ while(G.queue.length<max){const c=makeCustomer();G.queue.push(c);
+  const i=G.queue.length-1;requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   c.el.style.left=SLOTS[i]+'%'}));}}
 function positionQueue(){G.queue.forEach((c,i)=>c.el.style.left=SLOTS[i]+'%')}
 function serveNext(){if(G.state!=='IDLE')return;ensureQueue();
  const c=G.queue.shift();positionQueue();
@@ -997,54 +1308,81 @@ function genItems(type){
  if(type==='return'){
   const unit=PRODUCTS.filter(p=>!isWeight(p.id)).map(p=>p.id).sort(()=>Math.random()-.5).slice(0,rnd(1,2));
   return unit.map(id=>({pid:id,qty:1,sc:true}))}
- const n=type==='hurry'?rnd(1,2):type==='big'?rnd(4,6):rnd(2,5);
+ const n=type==='hurry'?rnd(1,2):type==='big'?rnd(4,6):type==='rowdy'?rnd(1,3):rnd(2,5);
  const ids=[...PRODUCTS.map(p=>p.id)].sort(()=>Math.random()-.5).slice(0,n);
  return ids.map(id=>isWeight(id)
   ?{pid:id,qty:1,w:rnd(35,160)/100,sc:Math.random()>.16}
   :{pid:id,qty:type==='big'?rnd(1,3):(type==='babushka'&&Math.random()<.3?2:1),sc:Math.random()>.16})}
 function startService(c){G.customer=c;G.svcStart=Date.now();G.errorsThis=0;G.changeErr=0;
  G.receipt=[];G.qtyBuf=null;G.handed=[];G.collected=0;G.taken=0;G.payMethod=null;G.bagN=0;
- G.isReturn=false;clearModes();closeDrawer();
+ G.isReturn=false;G.fakeIdx=-1;G.fakeTaken=0;clearModes();closeDrawer();detReset();
  G.scaleLine=null;$('#slDisp').textContent='0.000';
  $('#bagCount').textContent='0';
  G.belt=genItems(c.type);renderBelt();
- c.pat=100;updateBar(c);setMood(c,'flat');
+ c.pat=100;updateBar(c);if(c.type!=='rowdy')setMood(c,'flat');
  $('#ledCheck').classList.remove('on');
+ if(c.type==='rowdy'){
+  lcd('⚠ ДЕБОШ НА КАССЕ','ВЫЗОВИТЕ ОХРАНУ');lcdErr();sfx.alarm();
+  say(c,c.name+': '+pick(ROWDY_SAY),3200);
+  $('#broom').classList.add('hintGlow');
+  G.state='RINGING';return}
  lcd('НОВЫЙ ЧЕК 0.00','ТОВАРОВ: '+beltUnits());
  say(c,c.type==='return'?c.name+': Здравствуйте! Мне нужно вернуть...':c.name+': '+pick(GREET));
  G.state='RINGING'}
 function updateBar(c){const f=c.el.querySelector('.p-fill');f.style.width=Math.max(0,c.pat)+'%';
  f.className='p-fill'+(c.pat<30?' low':c.pat<60?' mid':'')}
 function leave(c,angry){G.state='IDLE';G.customer=null;
- G.belt=[];G.receipt=[];$('#beltItems').innerHTML='';$('#cashSpot').innerHTML='';
+ G.belt=[];G.receipt=[];$('#beltItems').innerHTML='';$('#cashSpot').innerHTML='';detReset();
  $('#ledCheck').classList.remove('on');lcd('КАССА ГОТОВА','0.00');
  if(angry){c.el.classList.add('rush');setMood(c,'angry')}
  setTimeout(()=>{c.el.style.left='112%';setTimeout(()=>c.el.remove(),1300)},angry?200:600);
- setTimeout(serveNext,angry?1300:1600)}
+ setTimeout(serveNext,(angry?1300:1600)*(G.rush.active?.45:1))}
 
-/* ---------- лента и сканер ---------- */
+/* ---------- час пик ---------- */
+function startRush(){
+ G.rush={active:true,endsAt:Date.now()+100000,target:500+G.checks*100+rnd(0,300),earned:0};
+ $('#rush').classList.add('on');$('#scene').classList.add('rush');
+ sfx.alarm();toast('⚡ ЧАС ПИК! План: '+G.rush.target+' ₽ за 100 секунд');
+ ensureQueue()}
+function endRush(){
+ const ok=G.rush.earned>=G.rush.target;
+ G.rush.active=false;
+ $('#rush').classList.remove('on');$('#scene').classList.remove('rush');
+ if(ok){const bonus=Math.round(G.rush.target*.1);G.tips+=bonus;G.rating=Math.min(5,G.rating+.2);
+  sfx.chime();toast('✅ План выполнен! Премия +'+bonus+' ₽')}
+ else{G.rating=Math.max(1,G.rating-.2);sfx.err();toast('❌ План не выполнен — рейтинг −0,2')}
+ updHUD()}
+
+/* ---------- лента (рендер + скан) ---------- */
+function itemHTML(l){const p=prod(l.pid);
+ return `<span class="bi-plu">${l.pid}</span><span class="bi-ico">${p.icon}</span>
+  <span class="bi-name">${p.name}</span><span class="bi-price">${p.price}₽${isWeight(l.pid)?'/КГ':''}</span>
+  <span class="bi-bc${l.sc?'':' bad'}"><i></i><b>${ean(l.pid)}</b></span>
+  ${l.w?`<span class="bi-qty wgt">${l.w.toFixed(2)}кг</span>`:(l.qty>1?`<span class="bi-qty">×${l.qty}</span>`:'')}`}
 function renderBelt(){const box=$('#beltItems');box.innerHTML='';
- G.belt.forEach(l=>{if(l.qty<=0)return;const p=prod(l.pid);
+ G.belt.forEach(l=>{if(l.qty<=0)return;
   const el=document.createElement('div');el.className='belt-item';el.dataset.pid=l.pid;
-  el.style.setProperty('--pc',p.pc);
-  el.innerHTML=`<span class="bi-plu">${l.pid}</span><span class="bi-ico">${p.icon}</span>
-   <span class="bi-name">${p.name}</span><span class="bi-price">${p.price}₽${isWeight(l.pid)?'/КГ':''}</span>
-   <span class="bi-bc${l.sc?'':' bad'}"></span>
-   ${l.w?`<span class="bi-qty wgt">${l.w.toFixed(2)}кг</span>`:(l.qty>1?`<span class="bi-qty">×${l.qty}</span>`:'')}`;
-  el.addEventListener('click',()=>scanItem(l.pid));
+  el.style.setProperty('--pc',prod(l.pid).pc);
+  el.innerHTML=itemHTML(l);
+  makeDraggable(el,$('#scanner'),
+   ()=>G.state==='RINGING'||G.state==='EXAM',
+   pid=>scanItem(pid));
   box.appendChild(el)})}
-function beltEl(pid){return document.querySelector(`.belt-item[data-pid="${pid}"]`)}
+function beltEl(pid){return document.querySelector(`#beltItems .belt-item[data-pid="${pid}"]`)}
 function scanItem(pid){
- if(G.state!=='RINGING'){sfx.soft();return}
+ if(G.state!=='RINGING'&&G.state!=='EXAM'){sfx.soft();return}
  const line=G.belt.find(l=>l.pid===pid&&l.qty>0);if(!line)return;
  const el=beltEl(pid),p=prod(pid);
+ if(G.state==='RINGING'&&cur()&&cur().type==='rowdy'){
+  sfx.scanFail();if(el){el.classList.remove('nope');void el.offsetWidth;el.classList.add('nope')}
+  toast('Он не даёт товар — выгоните его метёлкой!');return}
  if(isWeight(pid)&&!(G.scaleLine&&G.scaleLine===line)){
   sfx.scanFail();toast('Весовой товар — сначала «ВЗВ»');shakeKey('vzv');return}
  if(!line.sc){
   sfx.scanFail();
   if(el){el.classList.remove('nope');void el.offsetWidth;el.classList.add('nope')}
-  const c=cur();if(c)say(c,`«${p.name}» не читается! PLU ${pid}`);
-  flashKey('p'+pid);toast('Вбейте вручную: клавиша '+pid);return}
+  const c=cur();if(c)say(c,`«${p.name}» не читается! ПЛУ ${pid}`);
+  toast('Штрих-код повреждён: наберите ПЛУ '+pid+' и жмите ПЛУ⏎');return}
  if(el){const lz=document.createElement('i');lz.className='laser';el.appendChild(lz);
   setTimeout(()=>lz.remove(),300)}
  const sc=$('#scanner');sc.classList.add('zap');setTimeout(()=>sc.classList.remove('zap'),260);
@@ -1054,18 +1392,18 @@ function scanItem(pid){
 /* ---------- весы ---------- */
 function resetScale(){setTimeout(()=>{$('#slDisp').textContent='0.000'},1100)}
 function weighNext(){
- if(G.state!=='RINGING'){sfx.soft();toast('Взвешивание — только при пробитии');return}
+ if(G.state!=='RINGING'&&G.state!=='EXAM'){sfx.soft();toast('Взвешивание — только при пробитии');return}
  const line=G.belt.find(l=>l.qty>0&&isWeight(l.pid));
  if(!line){sfx.soft();toast('На ленте нет весовых товаров');return}
  G.scaleLine=line;sfx.scale();
  const d=$('#slDisp');let i=0;clearInterval(G._wiv);
  G._wiv=setInterval(()=>{d.textContent=(0.2+Math.random()*1.4).toFixed(2)+' КГ';
   if(++i>6){clearInterval(G._wiv);d.textContent=line.w.toFixed(2)+' КГ';sfx.beep();
-   lcd('ВЗВЕС: '+line.w.toFixed(2)+' КГ',prod(line.pid).name+' → КЛАВИША')}},80)}
+   lcd('ВЗВЕС: '+line.w.toFixed(2)+' КГ',prod(line.pid).name+' → СКАН/ПЛУ')}},80)}
 
 /* ---------- логика кассы ---------- */
 function handleKey(k){clearHints();
- if(k.startsWith('p'))return ringProduct(+k.slice(1));
+ if(G.state==='INKAS'){sfx.soft();return}
  if(k.startsWith('d'))return onDigit(k.slice(1));
  switch(k){
   case 'itog':return itog();
@@ -1083,8 +1421,8 @@ function handleKey(k){clearHints();
   case 'kor':return korKey();
   case 'price':return priceKey();
   case 'kolvo':
-   if(G.state==='RINGING'){sfx.beep();
-    if(G.qtyBuf)lcd('КОЛ-ВО: '+G.qtyBuf,'КЛАВИША ТОВАРА');
+   if(G.state==='RINGING'||G.state==='EXAM'){sfx.beep();
+    if(G.qtyBuf)lcd('КОЛ-ВО: '+G.qtyBuf,'СКАН ИЛИ ПЛУ⏎');
     else{G.qtyBuf=null;lcd('КОЛ-ВО: 1','ВВЕДИ ЦИФРУ')}}
    else sfx.soft();return;
   case 'kch':
@@ -1100,30 +1438,31 @@ function handleKey(k){clearHints();
 function onDigit(d){
  const v=d==='00'?0:+d;
  if(G.piMode){G.piBuf=(G.piBuf+(d==='00'?'0':d)).slice(0,2);
-  lcd('ПОИСК ПЛУ: '+G.piBuf,'НАЖМИ «ПИ»');return}
+  lcd('ПЛУ: '+G.piBuf,'НАЖМИ «ПЛУ⏎»');return}
  if(G.korMode){G.korQty=G.korQty==null?v:Math.min(99,G.korQty*10+v);
-  lcd('КОР: КОЛ-ВО '+(G.korQty??'_'),'КЛАВИША ТОВАРА');return}
+  lcd('КОР: КОЛ-ВО '+(G.korQty??'_'),'СКАН ИЛИ ПЛУ⏎');return}
  if(G.priceMode){G.priceBuf=G.priceBuf==null?v:Math.min(9999,G.priceBuf*10+v);
-  lcd('ЦЕНА: '+(G.priceBuf??'_')+' ₽','КЛАВИША ТОВАРА');return}
- if(G.state==='RINGING'){
+  lcd('ЦЕНА: '+(G.priceBuf??'_')+' ₽','СКАН ИЛИ ПЛУ⏎');return}
+ if(G.state==='RINGING'||G.state==='EXAM'){
   G.qtyBuf=G.qtyBuf==null?v:Math.min(99,G.qtyBuf*10+v);
   if(G.qtyBuf===0)G.qtyBuf=null;
   lcd('КОЛ-ВО: '+(G.qtyBuf??1),'СУММА '+total().toFixed(2));return}
  sfx.soft()}
 function piKey(){
- if(G.state!=='RINGING'){sfx.soft();return}
- if(!G.piMode){G.piMode=true;G.piBuf='';lcd('ПОИСК ПЛУ: _','ЦИФРЫ, ПОТОМ «ПИ»');return}
+ if(G.state!=='RINGING'&&G.state!=='EXAM'){sfx.soft();return}
+ if(!G.piMode){G.piMode=true;G.piBuf='';lcd('ПЛУ: _','ЦИФРЫ, ПОТОМ «ПЛУ⏎»');return}
  const id=+G.piBuf;G.piMode=false;
- if(id>=1&&id<=PRODUCTS.length){const p=prod(id);flashKey('p'+id);sfx.beep();
-  lcd('ПЛУ '+id+' · '+p.name,p.price+'₽'+(isWeight(id)?'/КГ':''))}
+ if(id>=1&&id<=PRODUCTS.length){const p=prod(id);sfx.beep();
+  lcd('ПЛУ '+id+' · '+p.name,p.price+'₽'+(isWeight(id)?'/КГ':''));
+  ringProduct(id)}
  else{sfx.err();lcdErr();lcd('ПЛУ НЕ НАЙДЕН','—')}}
 function korKey(){
  if(G.state!=='RINGING'){sfx.soft();return}
  if(G.korMode){G.korMode=false;G.korQty=null;lcd('КОР ОТМЕНА','СУММА '+total().toFixed(2));return}
- G.korMode=true;G.korQty=null;lcd('КОР: КОЛ-ВО _','ЦИФРА + ТОВАР')}
+ G.korMode=true;G.korQty=null;lcd('КОР: КОЛ-ВО _','ЦИФРА + СКАН/ПЛУ⏎')}
 function priceKey(){
  if(G.state!=='RINGING'){sfx.soft();toast('Своя цена — только при пробитии');return}
- if(G.priceMode&&G.priceBuf){sfx.beep();lcd('ЦЕНА: '+G.priceBuf+' ₽','ЖМИ КЛАВИШУ ТОВАРА');return}
+ if(G.priceMode&&G.priceBuf){sfx.beep();lcd('ЦЕНА: '+G.priceBuf+' ₽','СКАН ИЛИ ПЛУ⏎');return}
  if(G.priceMode){G.priceMode=false;G.priceBuf=null;lcd('ЦЕНА ОТМЕНА','СУММА '+total().toFixed(2));return}
  G.priceMode=true;G.priceBuf=null;lcd('ЦЕНА: _ ₽','ВВЕДИ ЦИФРАМИ')}
 function applyKor(pid){
@@ -1136,20 +1475,24 @@ function applyKor(pid){
  G.korMode=false;G.korQty=null}
 function ringProduct(pid){
  if(G.korMode){applyKor(pid);return}
- if(G.state!=='RINGING'){
+ if(G.state!=='RINGING'&&G.state!=='EXAM'){
   if(G.state==='TOTAL'||G.state==='COLLECT')toast('Чек закрыт: оплата или ОТМЕНА');else sfx.soft();return}
  const line=G.belt.find(l=>l.pid===pid&&l.qty>0);
- if(!line){sfx.err();flashLED();shakeReg();lcdErr();G.errors++;updHUD();
+ if(!line){sfx.err();flashLED();shakeReg();lcdErr();G.errors++;G.pen+=50;updHUD();
   const c=cur();if(c){c.pat-=10;updateBar(c);say(c,pick(NOPE))}
   lcd('ОШИБКА ТОВАРА','СУММА '+total().toFixed(2));return}
  const p=prod(pid);
  const unit=(G.priceMode&&G.priceBuf)?G.priceBuf:p.price;
  G.priceMode=false;G.priceBuf=null;
- const rec={pid,sec:G.section,price:unit!==p.price?unit:undefined};
  let disp;
+ if(G.state==='EXAM'){
+  line.qty=0;G.qtyBuf=null;G.exam.score++;
+  disp=`${p.name}${line.w?' '+line.w.toFixed(2)+'КГ':''} ✓`;
+  const el=beltEl(pid);if(el){el.classList.add('fly');setTimeout(()=>el.remove(),420)}
+  lcd('СКАН: '+G.exam.score,disp);
+  return}
+ const rec={pid,sec:G.section,price:unit!==p.price?unit:undefined};
  if(isWeight(pid)){
-  if(!(G.scaleLine&&G.scaleLine===line)){sfx.err();shakeReg();
-   toast('Этот товар надо взвесить: «ВЗВ»');shakeKey('vzv');return}
   rec.qty=1;rec.w=line.w;
   disp=`${p.name} ${line.w.toFixed(2)}КГ ${(unit*line.w).toFixed(0)}`;
   line.qty=0;G.scaleLine=null;resetScale();
@@ -1196,15 +1539,16 @@ function anull(){
   voidAll();tone(440,.16,'square',.1);toast('Чек полностью аннулирован')}
  else sfx.soft()}
 function searchKeys(){
- const lines=G.belt.filter(l=>l.qty>0);
- if(!lines.length){sfx.soft();return}
- lines.forEach(l=>flashKey('p'+l.pid));
- sfx.beep();toast('Нужные товары подсвечены')}
+ const els=document.querySelectorAll('#beltItems .belt-item');
+ if(!els.length){sfx.soft();return}
+ els.forEach(el=>{el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')});
+ sfx.beep();toast('Товары на ленте подсвечены')}
 function itog(){
  if(G.state==='TOTAL'||G.state==='COLLECT'){sfx.beep();
   lcd(G.isReturn?'К ВОЗВРАТУ':'К ОПЛАТЕ',total().toFixed(2));return}
  if(G.state!=='RINGING'){sfx.soft();return}
- if(G.receipt.length===0){sfx.err();lcd('ЧЕК ПУСТ','—');toast('Сначала вбейте товары');return}
+ if(cur()&&cur().type==='rowdy'){sfx.err();say(cur(),pick(ROWDY_SAY));toast('С дебоширом только метёлка');return}
+ if(G.receipt.length===0){sfx.err();lcd('ЧЕК ПУСТ','—');toast('Сначала пробейте товары');return}
  if(beltUnits()>0){sfx.err();flashLED();shakeReg();lcdErr();
   lcd('ТОВАРЫ НА ЛЕНТЕ!','СУММА '+total().toFixed(2));
   const c=cur();if(c)say(c,'Вы не всё пробили!');return}
@@ -1219,6 +1563,10 @@ function declare(){const c=cur();if(!c)return;
   hint('card',true)}
  else{say(c,c.type==='babushka'?'Вот, забирайте...':'Вот, возьмите');
   G.handed=genCash(total(),c.type);G.collected=0;G.taken=0;
+  G.fakeIdx=-1;
+  const big=G.handed.map((d,i)=>d>=500?i:-1).filter(i=>i>=0);
+  const fakeP=Math.min(.22,.12+G.shift*.008);
+  if(big.length&&Math.random()<fakeP)G.fakeIdx=pick(big);
   renderCash();G.state='COLLECT';
   lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`)}}
 function genCash(t,type){
@@ -1234,7 +1582,7 @@ function renderCash(){const s=$('#cashSpot');s.innerHTML='';
  const sum=handedSum();
  G.handed.forEach((d,i)=>setTimeout(()=>{
   const w=document.createElement('span');
-  w.className='hm wait';w.dataset.d=d;
+  w.className='hm wait'+(i===G.fakeIdx?' sus':'');w.dataset.i=i;
   w.style.transform=`rotate(${rnd(-7,7)}deg)`;
   w.innerHTML=cashHTML(d,'mid');
   s.appendChild(w)},i*230));
@@ -1243,14 +1591,9 @@ function renderCash(){const s=$('#cashSpot');s.innerHTML='';
 $('#cashSpot').addEventListener('click',e=>{
  const el=e.target.closest('.hm');if(!el)return;
  if(G.state!=='COLLECT'){sfx.soft();return}
- const d=+el.dataset.d;
- el.classList.remove('wait');el.classList.add('gone');
- d>=50?sfx.cash():sfx.coin();
- flyTo(el,'#lcd',el.innerHTML);
- setTimeout(()=>el.remove(),260);
- G.collected+=d;G.taken++;
- lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО ${G.collected} ИЗ ${handedSum()}`);
- if(G.taken===G.handed.length)setTimeout(finishCollect,480)});
+ if(G.checking)return;
+ if(G.fakePending){toast('Сначала решите с подозрительной купюрой');sfx.soft();return}
+ detCheck(el,+el.dataset.i,+el.dataset.i)});
 function finishCollect(){
  if(G.state!=='COLLECT')return;
  const sum=handedSum(),change=sum-total();
@@ -1307,7 +1650,7 @@ function resolveCard(){
   $('#tScreen').className='bad';$('#tL1').textContent='ОТКЛОНЕНО ✗';$('#tL2').textContent='';
   sfx.err();const c=cur();if(c)say(c,'Ой... не проходит. Наличными давайте');
   setTimeout(()=>{if(!cur())return;cur().pay='cash';
-   G.handed=genCash(total(),cur().type);G.collected=0;G.taken=0;
+   G.handed=genCash(total(),cur().type);G.collected=0;G.taken=0;G.fakeIdx=-1;
    renderCash();G.state='COLLECT';say(cur(),'Вот наличные, извините');
    lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`);resetTerm()},1400)}
  else{$('#tScreen').className='ok';$('#tL1').textContent='ОДОБРЕНО ✓';
@@ -1322,7 +1665,8 @@ $('#tOk').addEventListener('click',()=>{sfx.key();
 $('#tNo').addEventListener('click',()=>{sfx.key();
  if(G.state==='CARD'){resetTerm();
   const c=cur();if(c){c.pay='cash';G.handed=genCash(total(),c.type);
-   G.collected=0;G.taken=0;renderCash();G.state='COLLECT';
+   G.collected=0;G.taken=0;G.fakeIdx=-1;
+   renderCash();G.state='COLLECT';
    say(c,'Ладно, давайте наличными');
    lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`)}}});
 
@@ -1330,24 +1674,158 @@ $('#tNo').addEventListener('click',()=>{sfx.key();
 function openDrawer(){$('#drawer').classList.add('open')}
 function closeDrawer(){$('#drawer').classList.remove('open')}
 function renderTray(){$('#trNeed').textContent=G.changeDue;
- $('#trItems').innerHTML=G.tray.map(d=>cashHTML(d,'mini pop')).join('');
- const s=G.tray.reduce((a,b)=>a+b,0),el=$('#trSum');el.textContent=s;
+ const arr=G.state==='INKAS'?G.inkas.bag:G.tray;
+ $('#trItems').innerHTML=arr.map(d=>cashHTML(d,'mini pop')).join('');
+ const s=arr.reduce((a,b)=>a+b,0),el=$('#trSum');el.textContent=s;
  el.className=s===G.changeDue?'match':s>G.changeDue?'over':''}
-$('#trUndo').addEventListener('click',()=>{sfx.key();G.tray.pop();renderTray()});
-$('#trClear').addEventListener('click',()=>{sfx.key();G.tray=[];renderTray()});
+$('#trUndo').addEventListener('click',()=>{sfx.key();
+ if(G.state==='INKAS'){const d=G.inkas.bag.pop();
+  if(d!=null){const it=[...G.inkas.pile].reverse().find(p=>p.taken&&p.d===d);if(it)it.taken=false}
+  renderPile();renderTray();return}
+ G.tray.pop();renderTray()});
+$('#trClear').addEventListener('click',()=>{sfx.key();
+ if(G.state==='INKAS'){G.inkas.bag=[];G.inkas.pile.forEach(p=>p.taken=false);renderPile();renderTray();return}
+ G.tray=[];renderTray()});
 $('#trGive').addEventListener('click',()=>{sfx.key();
+ if(G.state==='INKAS')return inkasGive();
  if(G.state!=='CASH_CHANGE')return;
  const s=G.tray.reduce((a,b)=>a+b,0);if(s===0){sfx.soft();return}
  if(s===G.changeDue){sfx.drawer();setTimeout(sfx.chime,200);
   closeDrawer();const c=cur();if(c)say(c,G.isReturn?'Спасибо вам!':'Спасибо!');
   G.isReturn?printReturn():printSale()}
- else{sfx.err();shakeReg();lcdErr();G.errors++;G.errorsThis++;G.changeErr++;updHUD();flashLED();
+ else{sfx.err();shakeReg();lcdErr();G.errors++;G.pen+=50;G.errorsThis++;G.changeErr++;updHUD();flashLED();
   const tr=$('#drTray');tr.classList.remove('shake');void tr.offsetWidth;tr.classList.add('shake');
   const c=cur();if(c){c.pat-=14;updateBar(c);
    say(c,s<G.changeDue?(G.isReturn?`Мне же ${G.changeDue-s} ₽ не хватает!`:`Недодали! Ещё ${G.changeDue-s} ₽`):'Лишнее даёте! Пересчитайте')}
   if(G.changeErr>=2){G.rating=Math.max(1,G.rating-.2);updHUD();
    if(c)say(c,'Эх, давайте я сама посчитаю...');
    closeDrawer();G.isReturn?printReturn():printSale('meh')}}});
+
+/* ---------- инкассация ---------- */
+function decBills(total){const out=[];
+ for(const b of BILLS)while(total>=b){out.push(b);total-=b}
+ for(const c of COINS)while(total>=c){out.push(c);total-=c}
+ return out}
+function openInkas(){
+ const target=G.cashRev,extra=pick([100,200,300,500]);
+ const pile=shuffle(decBills(target).concat(decBills(extra))).map(d=>({d,taken:false}));
+ G.inkas={pile,bag:[],target};
+ G.state='INKAS';G.changeDue=target;
+ $('#drawer').classList.add('inkas');
+ $('#drTitle').textContent='ИНКАССАЦИЯ · ПЕРЕСЧЁТ ВЫРУЧКИ';
+ $('#drHint').textContent='соберите в сумку ровно '+target+' ₽ — лишнее не класть';
+ $('#trNeedLbl').textContent='СДАТЬ:';
+ $('#trGive').textContent='СДАТЬ ▸';
+ renderPile();renderTray();
+ openDrawer();sfx.drawer();toast('🔒 Инкассация: пересчитайте выручку')}
+function renderPile(){$('#inkPile').innerHTML=G.inkas.pile.map((p,i)=>
+ p.taken?'':`<span class="pileB" data-i="${i}" style="transform:rotate(${rnd(-9,9)}deg)">${cashHTML(p.d,'mini')}</span>`).join('')}
+function inkasGive(){
+ const s=G.inkas.bag.reduce((a,b)=>a+b,0);
+ if(s===G.inkas.target){
+  const bonus=Math.max(20,Math.round(G.inkas.target*.02/5)*5);
+  G.tips+=bonus;G.inkBonus=bonus;updHUD();
+  sfx.chime();toast('✅ Инкассация сдана! Премия +'+bonus+' ₽');
+  closeDrawer();$('#drawer').classList.remove('inkas');
+  setTimeout(showZEnd,700)}
+ else{sfx.err();
+  const tr=$('#drTray');tr.classList.remove('shake');void tr.offsetWidth;tr.classList.add('shake');
+  toast('Не сходится! В сумке '+s+' ₽, нужно '+G.inkas.target+' ₽')}}
+function showZEnd(){
+ $('#zEndPaper').innerHTML=reportHTML('z');
+ $('#zEnd').classList.remove('hidden')}
+
+/* ---------- аттестация ---------- */
+function startExam(){
+ G.exam={active:true,score:0,endsAt:Date.now()+60000};
+ G.belt=[];renderBelt();G.state='EXAM';G.scaleLine=null;$('#slDisp').textContent='0.000';
+ $('#examBar').classList.add('on');
+ lcd('АТТЕСТАЦИЯ','60 СЕКУНД · ПОЕХАЛИ!');
+ sfx.alarm();toast('🎓 60 секунд! Тащите всё через сканер');
+ for(let i=0;i<3;i++)spawnExamItem()}
+function spawnExamItem(){
+ const p=pick(PRODUCTS);
+ const line=isWeight(p.id)&&Math.random()<.5
+  ?{pid:p.id,qty:1,w:rnd(35,160)/100,sc:Math.random()>.15}
+  :{pid:p.id,qty:1,sc:Math.random()>.15};
+ G.belt.push(line);renderBelt()}
+function endExam(){
+ G.exam.active=false;$('#examBar').classList.remove('on');
+ G.belt=[];renderBelt();G.state='IDLE';
+ const s=G.exam.score;
+ const grade=s>=20?5:s>=13?4:s>=7?3:2;
+ const bonus={5:300,4:150,3:50,2:0}[grade];
+ G.balance+=bonus;
+ if(grade>=4)G.rating=Math.min(5,G.rating+.1);
+ updHUD();
+ const g=$('#exGrade');g.textContent=grade;g.className='grade g'+grade;
+ $('#exTxt').textContent=`Товаров за 60 секунд: ${s} · Премия +${bonus} ₽ к зарплате`;
+ $('#examEnd').classList.remove('hidden');
+ grade>=4?sfx.fanfare():sfx.err();
+ lcd('КАССА ГОТОВА','0.00')}
+$('#exOk').addEventListener('click',()=>{$('#examEnd').classList.add('hidden');serveNext()});
+
+/* ---------- дуэль ---------- */
+function renderPips(){[0,1].forEach(i=>{
+ $('#pips'+i).innerHTML=[0,1,2,3,4].map(j=>
+  `<i class="pip${j<G.duel.scores[i]?' on'+(i+1):''}" style="display:inline-block;margin:0 2px"></i>`).join('')})}
+function openDuel(){
+ G.duel={active:true,scores:[0,0],lists:[[],[]],done:[false,false],over:false,n:0};
+ renderPips();$('#duel').classList.add('on');$('#duelEnd').classList.add('hidden');
+ sfx.alarm();duelRound()}
+function duelRound(){
+ G.duel.over=false;G.duel.done=[false,false];
+ G.duel.n=rnd(5,8);
+ const ids=[...PRODUCTS.map(p=>p.id)].sort(()=>Math.random()-.5).slice(0,G.duel.n);
+ G.duel.lists=[ids.map(id=>({pid:id,qty:1})),ids.map(id=>({pid:id,qty:1}))];
+ [0,1].forEach(s=>{renderDuelSide(s);
+  $('#dlcd'+s).textContent=`0/${G.duel.n} · 0 ₽`;
+  $('#dsc'+s).textContent=`0/${G.duel.n}`;
+  $('#ditog'+s).classList.remove('hint');
+  $('#dside'+s).classList.remove('win')})}
+function renderDuelSide(s){
+ const box=$('#dbelt'+s);box.innerHTML='';
+ G.duel.lists[s].forEach(l=>{if(l.qty<=0)return;
+  const el=document.createElement('div');el.className='belt-item';el.dataset.pid=l.pid;
+  el.style.setProperty('--pc',prod(l.pid).pc);
+  el.innerHTML=itemHTML(l);
+  makeDraggable(el,$('#dscan'+s),
+   ()=>G.duel.active&&!G.duel.over,
+   pid=>duelScan(s,pid,el));
+  box.appendChild(el)})}
+function duelScan(s,pid,el){
+ if(G.duel.over)return;
+ const line=G.duel.lists[s].find(l=>l.pid===pid&&l.qty>0);if(!line)return;
+ line.qty=0;sfx.scan();
+ el.classList.add('fly');setTimeout(()=>el.remove(),420);
+ const done=G.duel.n-G.duel.lists[s].filter(l=>l.qty>0).length;
+ const sum=G.duel.lists[s].reduce((a,l)=>a+(l.qty>0?0:prod(l.pid).price),0);
+ $('#dlcd'+s).textContent=`${done}/${G.duel.n} · ${sum} ₽`;
+ $('#dsc'+s).textContent=`${done}/${G.duel.n}`;
+ if(done===G.duel.n){G.duel.done[s]=true;
+  $('#dlcd'+s).textContent+=' · ЖМИ ИТОГ!';
+  $('#ditog'+s).classList.add('hint')}}
+[0,1].forEach(s=>{$('#ditog'+s).addEventListener('click',()=>{
+ if(!G.duel.active||G.duel.over)return;
+ if(!G.duel.done[s]){sfx.soft();return}
+ duelWin(s)})});
+function duelWin(s){
+ G.duel.over=true;G.duel.scores[s]++;renderPips();
+ sfx.fanfare();
+ const side=$('#dside'+s);side.classList.add('win');
+ if(G.duel.scores[s]>=5){
+  setTimeout(()=>{
+   const w=$('#deWinner');w.textContent='ПОБЕДИЛ ИГРОК '+(s+1)+'!';
+   w.className=s===0?'w1':'w2';
+   $('#deScore').textContent=G.duel.scores[0]+' : '+G.duel.scores[1];
+   $('#duelEnd').classList.remove('hidden')},900)}
+ else{toast('Раунд за игроком '+(s+1)+'!');setTimeout(duelRound,1400)}}
+$('#deAgain').addEventListener('click',()=>{$('#duelEnd').classList.add('hidden');
+ G.duel.scores=[0,0];renderPips();duelRound()});
+function closeDuel(){$('#duel').classList.remove('on');G.duel.active=false;
+ $('#duelEnd').classList.add('hidden');openMenu()}
+$('#deMenu').addEventListener('click',closeDuel);
+$('#duelExit').addEventListener('click',closeDuel);
 
 /* ---------- печать ---------- */
 function qr(){const n=String(Date.now()).slice(-8);
@@ -1392,6 +1870,14 @@ function reportHTML(kind){const now=new Date();
  const z=kind==='z';const avg=G.checks?Math.round(G.revenue/G.checks):0;
  const secLines=[1,2,3].map(s=>G.secTotals[s]>0?
   `<div class="pl"><span>СЕКЦИЯ ${s} · ${SECN[s]}</span><span>${G.secTotals[s].toFixed(2)}</span></div>`:'').join('');
+ let payBlock='';
+ if(z){const base=1200,net=base+G.tips-G.pen;
+  payBlock=`<div class="sep"></div><div class="pl c b">РАСЧЁТНЫЙ ЛИСТОК</div>
+   <div class="pl"><span>ОКЛАД</span><span>+${base.toFixed(2)}</span></div>
+   <div class="pl"><span>ЧАЕВЫЕ/ПРЕМИИ</span><span>+${G.tips.toFixed(2)}</span></div>
+   <div class="pl"><span>ШТРАФЫ</span><span>−${G.pen.toFixed(2)}</span></div>
+   <div class="pl b"><span>К ВЫПЛАТЕ</span><span>${net.toFixed(2)}</span></div>
+   <div class="pl"><span>БАЛАНС ПОСЛЕ</span><span>${(G.balance+net).toFixed(2)}</span></div>`}
  return `<div class="pl c b">${z?'Z-ОТЧЁТ':'X-ОТЧЁТ'}</div>
   <div class="pl c">ККМ ЭЛЕКТРОН-95 · ${now.toLocaleDateString('ru-RU')} ${now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}</div>
   <div class="pl c">${z?'СМЕНА №'+G.shift+' ЗАКРЫТА':'ПРОМЕЖУТОЧНЫЙ'}</div><div class="sep"></div>
@@ -1401,10 +1887,9 @@ function reportHTML(kind){const now=new Date();
   <div class="pl"><span>КАРТОЙ</span><span>${G.cardRev.toFixed(2)}</span></div>
   <div class="pl"><span>ВОЗВРАТОВ</span><span>${G.returns} · −${G.retSum.toFixed(2)}</span></div>
   ${secLines}
-  <div class="pl"><span>ЧАЕВЫЕ</span><span>${G.tips.toFixed(2)}</span></div>
   <div class="pl"><span>СР. ЧЕК</span><span>${avg.toFixed(2)}</span></div>
   <div class="pl"><span>ОШИБКИ</span><span>${G.errors}</span></div>
-  <div class="pl"><span>РЕЙТИНГ</span><span>${G.rating.toFixed(1)}</span></div><div class="sep"></div>
+  <div class="pl"><span>РЕЙТИНГ</span><span>${G.rating.toFixed(1)}</span></div>${payBlock}<div class="sep"></div>
   <div class="pl c">${z?'ИТОГ СМЕНЫ':'КАССА В РАБОТЕ'}</div>${barcode()}`}
 function printPaper(html,dur,cb){if(G.printerBusy){toast('Принтер занят');return}
  G.printerBusy=true;const box=$('#paperBox'),paper=$('#paper');
@@ -1434,9 +1919,9 @@ function tryZ(){if(G.state!=='IDLE'){toast('Дослужите покупате�
  $('#zConf').classList.remove('hidden')}
 $('#zNo').addEventListener('click',()=>$('#zConf').classList.add('hidden'));
 $('#zYes').addEventListener('click',()=>{$('#zConf').classList.add('hidden');
- sfx.beep();printPaper(reportHTML('z'),2,null);
- setTimeout(()=>{$('#zEndPaper').innerHTML=reportHTML('z');
-  $('#zEnd').classList.remove('hidden')},2900)});
+ sfx.beep();
+ printPaper(reportHTML('z'),2,()=>{
+  if(G.cashRev>0)openInkas();else showZEnd();})});
 $('#zAgain').addEventListener('click',()=>{$('#zEnd').classList.add('hidden');newShift()});
 
 /* ---------- завершение ---------- */
@@ -1446,6 +1931,7 @@ function finishCustomer(mood){const c=cur();if(!c)return;
   updHUD();setMood(c,'happy');say(c,'Спасибо, извините за беспокойство!',2000)}
  else{
   if(G.payMethod==='cash')G.cashRev+=tot;else G.cardRev+=tot;
+  if(G.rush.active)G.rush.earned+=tot;
   const elapsed=Date.now()-G.svcStart;
   if(mood==='happy'&&elapsed<28000&&G.errorsThis===0){
    const tip=Math.max(5,Math.round(tot*.06/5)*5);G.tips+=tip;
@@ -1453,21 +1939,42 @@ function finishCustomer(mood){const c=cur();if(!c)return;
    floatAt(c.el,'+'+tip+' ₽ ЧАЕВЫЕ')}
   else if(mood==='meh')G.rating=Math.max(1,G.rating-.1);
   updHUD();setMood(c,mood);say(c,mood==='happy'?pick(THANKS):'Ладно уж...',2000)}
+ if(G.fakeTaken>0){
+  sfx.alarm();G.revenue-=G.fakeTaken;G.cashRev-=G.fakeTaken;G.errors++;G.pen+=200;
+  G.rating=Math.max(1,G.rating-.3);updHUD();flashLED();
+  toast('💀 При пересчёте всплыла фальшивка: −'+G.fakeTaken+' ₽, штраф 200 ₽')}
+ G.fakeTaken=0;
  G.checks++;
+ if(!G.rush.active&&G.checks>0&&G.checks%4===0)startRush();
  leave(c,false)}
 function angryLeave(){const c=cur();if(!c)return;sfx.angry();
- G.errors++;G.rating=Math.max(1,G.rating-.4);updHUD();
- say(c,'Всё! В другой магазин!',1800);
- toast('Покупатель ушёл недовольный — рейтинг −0,4');
+ G.errors++;G.pen+=150;G.rating=Math.max(1,G.rating-.4);updHUD();G.fakeTaken=0;detReset();
+ if(c.type==='rowdy'){G.pen+=200;G.rating=Math.max(1,G.rating-.1);
+  toast('💥 Дебошир разгромил прилавок! Штраф 200 ₽');sfx.alarm()}
+ else{say(c,'Всё! В другой магазин!',1800);
+  toast('Покупатель ушёл недовольный — рейтинг −0,4')}
  leave(c,true)}
 
 /* ---------- циклы ---------- */
-setInterval(()=>{const c=cur();
+setInterval(()=>{
+ if(G.rush.active){const rem=G.rush.endsAt-Date.now();
+  if(rem<=0)endRush();
+  else{$('#rushFill').style.width=Math.min(100,G.rush.earned/G.rush.target*100)+'%';
+   const s=Math.ceil(rem/1000);
+   $('#rushTxt').textContent=`${G.rush.earned} / ${G.rush.target} ₽ · ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}}
+ if(G.exam.active){const rem=G.exam.endsAt-Date.now();
+  if(rem<=0){endExam()}
+  else{const s=Math.ceil(rem/1000);
+   $('#examFill').style.width=(rem/60000*100)+'%';
+   $('#examTxt').textContent=`0:${String(s).padStart(2,'0')} · СКАНОВ: ${G.exam.score}`;
+   if(G.belt.filter(l=>l.qty>0).length<4&&Math.random()<.14)spawnExamItem()}}
+ const c=cur();
  if(!c||!['RINGING','TOTAL','COLLECT','CASH_CHANGE','CARD','CARD_PROC'].includes(G.state))return;
- c.pat-=100/(c.patMax*5);updateBar(c);
- if(c.pat<30)setMood(c,'sad');
- if(!c.nag1&&c.pat<55){c.nag1=true;say(c,pick(NAG))}
- if(!c.nag2&&c.pat<25){c.nag2=true;say(c,pick(NAG))}
+ const mult=G.rush.active?1.55:1;
+ c.pat-=100/(c.patMax*5)*mult;updateBar(c);
+ if(c.pat<30&&c.type!=='rowdy')setMood(c,'sad');
+ if(!c.nag1&&c.pat<55){c.nag1=true;say(c,c.type==='rowdy'?pick(ROWDY_SAY):pick(NAG))}
+ if(!c.nag2&&c.pat<25){c.nag2=true;say(c,c.type==='rowdy'?pick(ROWDY_SAY):pick(NAG))}
  if(c.pat<=0)angryLeave()},200);
 setInterval(()=>{if(!G.shiftStart)return;
  const s=Math.floor((Date.now()-G.shiftStart)/1000);
@@ -1483,19 +1990,37 @@ setInterval(()=>{const ps=[...document.querySelectorAll('.person:not(.rush)')];i
   setTimeout(()=>p.classList.remove('blink'),140)},260)},3200);
 
 /* ---------- смена ---------- */
-function newShift(){G.shift++;G.revenue=0;G.cashRev=0;G.cardRev=0;G.tips=0;G.checks=0;
- G.errors=0;G.rating=5;G.errorsThis=0;G.changeErr=0;G.receipt=[];G.belt=[];
+function newShift(){
+ G.balance+=1200+G.tips-G.pen;
+ G.shift++;G.revenue=0;G.cashRev=0;G.cardRev=0;G.tips=0;G.pen=0;G.checks=0;
+ G.errors=0;G.errorsThis=0;G.changeErr=0;G.receipt=[];G.belt=[];
  G.handed=[];G.tray=[];G.qtyBuf=null;G.customer=null;G.isReturn=false;
- G.returns=0;G.retSum=0;G.secTotals={1:0,2:0,3:0};G.lastPaper=null;clearModes();
+ G.returns=0;G.retSum=0;G.secTotals={1:0,2:0,3:0};G.lastPaper=null;
+ G.inkas=null;G.inkBonus=0;G.rush={active:false,endsAt:0,target:0,earned:0};
+ $('#rush').classList.remove('on');$('#scene').classList.remove('rush');
+ $('#drawer').classList.remove('inkas');$('#trGive').textContent='ОТДАТЬ ▸';
+ $('#drTitle').textContent='ДЕНЕЖНЫЙ ЯЩИК · ДЯ-2М';
+ $('#drHint').textContent='кликайте по купюрам и монетам, чтобы собрать сдачу';
+ clearModes();
  $('#people').innerHTML='';G.queue=[];updHUD();
  $('#hShift').textContent='СМЕНА №'+G.shift;
  G.shiftStart=Date.now();G.state='IDLE';lcd('КАССА ГОТОВА','0.00');
- toast('Смена №'+G.shift+' открыта');ensureQueue();serveNext()}
+ toast('Смена №'+G.shift+' открыта · оклад 1200 ₽');ensureQueue();serveNext()}
+
+/* ---------- меню ---------- */
+function openMenu(){
+ $('#msLbl').textContent=G.shiftStart>0?'ПРОДОЛЖИТЬ СМЕНУ':'НАЧАТЬ СМЕНУ';
+ $('#intro').classList.remove('hidden')}
+$('#modeSingle').addEventListener('click',()=>{ac();sfx.drawer();
+ $('#intro').classList.add('hidden');
+ if(G.shiftStart===0){G.shiftStart=Date.now();G.state='IDLE';updHUD();ensureQueue();serveNext()}});
+$('#modeDuel').addEventListener('click',()=>{ac();$('#intro').classList.add('hidden');openDuel()});
 
 /* ---------- клавиатура ---------- */
 document.addEventListener('keydown',e=>{
  if(!$('#intro').classList.contains('hidden')||!$('#zEnd').classList.contains('hidden')
-   ||!$('#zConf').classList.contains('hidden'))return;
+   ||!$('#zConf').classList.contains('hidden')||!$('#examEnd').classList.contains('hidden')
+   ||!$('#duelEnd').classList.contains('hidden')||G.duel.active)return;
  const k=e.key;let mapped=true;
  if(/^[0-9]$/.test(k))handleKey('d'+k);
  else if(k==='Backspace'||k.toLowerCase()==='с'||k.toLowerCase()==='c')handleKey('dC');
@@ -1514,13 +2039,16 @@ $('#hDate').textContent=new Date().toLocaleDateString('ru-RU',
  {weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});
 $('#btnMute').addEventListener('click',()=>{G.muted=!G.muted;
  $('#btnMute').textContent=G.muted?'🔇':'🔊';if(!G.muted)sfx.beep()});
-$('#btnHelp').addEventListener('click',()=>{$('#intro').classList.remove('hidden');
- $('#introStart').textContent='ПРОДОЛЖИТЬ'});
-buildShelves();buildKeys();buildDrawer();
+$('#btnHelp').addEventListener('click',openMenu);
+$('#btnExam').addEventListener('click',()=>{
+ if(G.duel.active)return;
+ if(G.state!=='IDLE'){toast('Экзамен — только в паузе между покупателями');return}
+ startExam()});
+$('#btnDuel').addEventListener('click',()=>{
+ if(G.state!=='IDLE'&&G.state!=='BOOT'){toast('Дуэль — только в паузе');return}
+ openDuel()});
+buildShelves();buildKeys();buildDrawer();updHUD();
 setTimeout(()=>lcd('КАССА ГОТОВА','0.00'),1300);
-$('#introStart').addEventListener('click',()=>{ac();sfx.drawer();
- $('#intro').classList.add('hidden');
- if(G.shiftStart===0){G.shiftStart=Date.now();G.state='IDLE';ensureQueue();serveNext()}});
 </script>
 </body>
 </html>
