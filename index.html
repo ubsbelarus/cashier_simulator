@@ -75,7 +75,7 @@ button{touch-action:manipulation;font-family:inherit}
 @keyframes coneSway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
 .dust i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,228,170,.55);
   animation:dustF 9s linear infinite;z-index:2}
-.dust i:nth-child(1){left:18%;top:34%;animation-delay:0s}
+.dust i:nth-child(1){left:18%;top:34%}
 .dust i:nth-child(2){left:24%;top:48%;animation-delay:-3s;animation-duration:11s}
 .dust i:nth-child(3){left:28%;top:26%;animation-delay:-6s}
 .dust i:nth-child(4){left:62%;top:40%;animation-delay:-2s;animation-duration:12s}
@@ -181,7 +181,7 @@ button{touch-action:manipulation;font-family:inherit}
   border-right:2px solid #26221c;border-bottom:2px solid #26221c;transform:translateX(-50%) rotate(45deg)}
 .p-bub.show{opacity:1;transform:translateX(-50%) scale(1)}
 
-/* ---- прилавок и лента ---- */
+/* ---- прилавок, лента, сканер ---- */
 #counter{position:absolute;left:0;right:0;bottom:12%;height:23%;z-index:5;
   background:repeating-linear-gradient(90deg,#6d4526 0 4px,#74492a 4px 130px,#6a4224 130px 134px,#74492a 134px 260px);
   border-top:9px solid #96633a;box-shadow:0 -4px 0 #b07a48,inset 0 14px 18px rgba(0,0,0,.28),0 -10px 24px rgba(0,0,0,.3)}
@@ -193,32 +193,64 @@ button{touch-action:manipulation;font-family:inherit}
   border:2px solid #44484e;border-bottom:none;animation:beltMove 2.5s linear infinite}
 @keyframes beltMove{to{background-position:40px 0}}
 #beltItems{position:absolute;left:7.5%;right:27.5%;bottom:calc(100% + 13px);
-  display:flex;gap:12px;align-items:flex-end;z-index:6;padding:0 10px}
+  display:flex;gap:10px;align-items:flex-end;z-index:6;padding:0 8px}
 .belt-item{background:none;border:none;padding:0;text-align:center;cursor:pointer;
   animation:popIn .3s cubic-bezier(.34,1.56,.64,1);transition:transform .4s,opacity .4s;position:relative;width:62px}
 .belt-item:hover{transform:translateY(-4px)}
-.belt-item .bi-ico{display:flex;align-items:center;justify-content:center;width:52px;height:52px;margin:0 auto;
-  border-radius:50%;font-size:27px;background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--pc) 75%,#fff),var(--pc));
+.belt-item:hover .bi-ico{box-shadow:0 4px 8px rgba(0,0,0,.35),inset 0 -4px 6px rgba(0,0,0,.18),0 0 12px rgba(255,80,60,.5)}
+.belt-item .bi-ico{display:flex;align-items:center;justify-content:center;width:50px;height:50px;margin:0 auto;
+  border-radius:50%;font-size:26px;transition:box-shadow .15s;
+  background:radial-gradient(circle at 34% 28%,color-mix(in srgb,var(--pc) 75%,#fff),var(--pc));
   border:2px solid rgba(0,0,0,.25);box-shadow:0 4px 8px rgba(0,0,0,.35),inset 0 -4px 6px rgba(0,0,0,.18)}
-.belt-item .bi-name{display:block;font:700 9px 'PT Sans';color:#e8e4d8;letter-spacing:.4px;
+.belt-item .bi-name{display:block;font:700 8.5px 'PT Sans';color:#e8e4d8;letter-spacing:.3px;
   text-shadow:0 1px 2px rgba(0,0,0,.7);margin:3px 0 2px}
 .belt-item .bi-price{display:inline-block;font:700 10.5px 'PT Mono';color:#4a3208;background:#ffd94d;
   padding:1px 7px;border-radius:3px;transform:rotate(-3deg);box-shadow:1px 2px 3px rgba(0,0,0,.4)}
-.belt-item .bi-qty{position:absolute;top:-7px;right:0;background:#d84437;color:#fff;
+.bi-bc{width:42px;height:11px;background-color:#fdfdf6;border-radius:2px;margin:3px auto 0;position:relative;
+  padding:1px 3px;background-image:repeating-linear-gradient(90deg,#1a1a1a 0 1.5px,transparent 1.5px 3.5px,#1a1a1a 3.5px 5px,transparent 5px 7px);
+  background-clip:content-box;background-origin:content-box}
+.bi-bc.bad{opacity:.8}
+.bi-bc.bad::after{content:'';position:absolute;left:-2px;right:-2px;top:45%;height:2.5px;background:#d84437;
+  transform:rotate(-9deg);border-radius:2px;box-shadow:0 0 3px rgba(0,0,0,.4)}
+.bi-plu{position:absolute;top:-6px;left:-5px;background:#565b62;color:#fff;font:700 8px 'PT Mono';
+  padding:1px 4px;border-radius:4px;border:1.5px solid #e8e4d8;z-index:2}
+.belt-item .bi-qty{position:absolute;top:-7px;right:-2px;background:#d84437;color:#fff;
   font:700 11px 'PT Sans';width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
   justify-content:center;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.4)}
 .belt-item.zap{animation:zap .3s}
 @keyframes zap{50%{transform:scale(1.18);filter:drop-shadow(0 0 10px rgba(125,255,155,.9))}}
+.belt-item.nope{animation:shakeX .32s}
 .belt-item.fly{transform:translate(150px,-30px) scale(.15) rotate(30deg);opacity:0}
 @keyframes popIn{from{transform:scale(.3);opacity:0}}
+.laser{position:absolute;left:-8px;right:-8px;top:14%;height:3px;border-radius:2px;background:#ff2818;z-index:5;
+  box-shadow:0 0 12px 3px rgba(255,40,24,.85);animation:laserScan .28s ease-in-out forwards;pointer-events:none}
+@keyframes laserScan{0%{top:10%;opacity:0}18%{opacity:1}82%{opacity:1}100%{top:82%;opacity:0}}
+
+#scanner{position:absolute;left:1.4%;top:-32px;width:56px;height:38px;z-index:6}
+.sc-base{position:absolute;bottom:-4px;left:9px;width:32px;height:8px;background:#171a1f;border-radius:3px;
+  box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.sc-body{position:absolute;left:7px;bottom:2px;width:40px;height:25px;transform:rotate(-9deg);
+  background:linear-gradient(#454b54,#22262c);border-radius:7px 11px 5px 5px;
+  box-shadow:0 3px 7px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2)}
+.sc-win{position:absolute;left:12px;top:3px;width:27px;height:5px;border-radius:2px;transform:rotate(-9deg);
+  background:#5a1210;box-shadow:0 0 5px rgba(255,60,40,.35);transition:.1s}
+#scanner.zap .sc-win{background:#ff3a28;box-shadow:0 0 16px 4px rgba(255,60,40,.95)}
+.sc-led{position:absolute;right:9px;top:12px;width:4px;height:4px;border-radius:50%;background:#37e06a;animation:pulse 2.4s infinite}
+
 #bagZone{position:absolute;right:5%;top:-64px;text-align:center;z-index:6}
 #bag{font-size:42px;display:block;filter:drop-shadow(2px 3px 3px rgba(0,0,0,.4))}
 #bagCount{font:700 12px 'PT Mono';color:#ffd97a;background:rgba(0,0,0,.45);padding:1px 8px;border-radius:8px}
 #bagCount.bump{animation:bump .3s}
 @keyframes bump{50%{transform:scale(1.4)}}
-#cashSpot{position:absolute;right:26%;top:-12px;display:flex;gap:7px;align-items:center;z-index:7;
-  flex-wrap:wrap;max-width:30%;justify-content:flex-end}
+#cashSpot{position:absolute;right:26%;top:-16px;display:flex;gap:8px;align-items:center;z-index:8;
+  flex-wrap:wrap;max-width:31%;justify-content:flex-end;transform-origin:bottom right}
 #cashSpot .lbl{font:700 10.5px 'PT Sans';color:#ffe9b0;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:8px}
+.hm{cursor:pointer;transition:transform .15s,filter .15s,opacity .25s;position:relative}
+.hm:hover{transform:translateY(-5px) rotate(0deg)!important;filter:brightness(1.12) drop-shadow(0 0 7px rgba(255,217,122,.85))}
+.hm:active{transform:scale(.82)!important}
+.hm.wait{animation:hmPulse 1.7s infinite}
+@keyframes hmPulse{50%{filter:drop-shadow(0 0 8px rgba(255,217,122,.8))}}
+.hm.gone{transform:scale(0) rotate(20deg)!important;opacity:0}
 
 /* ---- деньги ---- */
 .cash{display:inline-flex;align-items:center;justify-content:center;width:88px;height:42px;border-radius:4px;
@@ -228,12 +260,14 @@ button{touch-action:manipulation;font-family:inherit}
   position:relative}
 .cash::before{content:'';position:absolute;inset:3px;border:1px solid rgba(255,255,255,.28);border-radius:2px}
 .cash::after{content:'₽';position:absolute;right:7px;top:3px;font-size:10px;opacity:.65}
+.cash.mid{width:74px;height:36px;font-size:15px}
 .cash.mini{width:52px;height:25px;font-size:11px;border-width:1.5px}
 .cash.mini::before{inset:2px}
 .coin{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--bc) 65%,#fff),var(--bc));
   border:2px solid color-mix(in srgb,var(--bc) 55%,#000);color:#2a2418;font:700 14px 'PT Mono';
   box-shadow:0 2px 4px rgba(0,0,0,.4),inset 0 0 0 3px rgba(255,255,255,.22)}
+.coin.mid{width:34px;height:34px;font-size:13px}
 .coin.mini{width:24px;height:24px;font-size:10px;border-width:1.5px}
 .cash.pop,.coin.pop{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
 .ghost{position:fixed;z-index:99;pointer-events:none;margin:0;
@@ -248,8 +282,7 @@ button{touch-action:manipulation;font-family:inherit}
 #regWrap{position:relative;background:#1b1e23;border-radius:20px;padding:14px 18px 16px;
   box-shadow:inset 0 3px 8px rgba(0,0,0,.7),inset 0 -2px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.45)}
 .mug{position:absolute;left:-76px;bottom:14px;width:46px;height:42px;z-index:1;
-  background:linear-gradient(#c05040,#8a3225);border-radius:5px 5px 9px 9px;
-  box-shadow:0 4px 8px rgba(0,0,0,.5)}
+  background:linear-gradient(#c05040,#8a3225);border-radius:5px 5px 9px 9px;box-shadow:0 4px 8px rgba(0,0,0,.5)}
 .mug::after{content:'';position:absolute;right:-13px;top:8px;width:15px;height:18px;
   border:5px solid #a04434;border-left:none;border-radius:0 11px 11px 0}
 .steam{position:absolute;top:-15px;width:5px;height:15px;border-radius:4px;background:rgba(255,255,255,.4);
@@ -265,7 +298,7 @@ button{touch-action:manipulation;font-family:inherit}
 .roll.r1{bottom:0;left:0;transform:rotate(-5deg)}
 .roll.r2{bottom:16px;left:8px;transform:rotate(7deg)}
 
-#register{width:min(760px,94vw);background:linear-gradient(#dbd5c7,#bcb5a3);border-radius:16px 16px 10px 10px;
+#register{width:min(820px,95vw);background:linear-gradient(#dbd5c7,#bcb5a3);border-radius:16px 16px 10px 10px;
   padding:13px 15px 17px;position:relative;
   box-shadow:0 16px 36px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.65),inset 0 -6px 0 #948c78;
   background-image:radial-gradient(circle 3px at 13px 13px,#8a8270 40%,transparent 41%),
@@ -274,7 +307,7 @@ button{touch-action:manipulation;font-family:inherit}
     linear-gradient(#dbd5c7,#bcb5a3)}
 #register.shake{animation:regShake .35s}
 @keyframes regShake{20%{transform:translateX(-5px) rotate(-.3deg)}60%{transform:translateX(5px) rotate(.3deg)}}
-#regTop{display:flex;gap:13px;align-items:stretch;margin-bottom:13px}
+#regTop{display:flex;gap:13px;align-items:stretch;margin-bottom:11px}
 .regBrand{writing-mode:vertical-rl;transform:rotate(180deg);font-family:'Russo One';font-size:12px;
   color:#5a5344;letter-spacing:2px;display:flex;align-items:center;gap:6px}
 .regBrand em{font-style:normal;font-size:8px;background:#5a5344;color:#dbd5c7;padding:2px 4px;border-radius:2px;letter-spacing:1px}
@@ -285,12 +318,10 @@ button{touch-action:manipulation;font-family:inherit}
   background:linear-gradient(115deg,rgba(255,255,255,.09) 0 18%,transparent 18.5%)}
 #lcd::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
-#lcd1,#lcd2{font-family:'PT Mono';font-size:18px;color:#7dff9b;text-shadow:0 0 8px rgba(125,255,155,.6);
+#lcd1,#lcd2{font-family:'PT Mono';font-size:17px;color:#7dff9b;text-shadow:0 0 8px rgba(125,255,155,.6);
   letter-spacing:1px;white-space:nowrap;overflow:hidden;transition:color .15s}
-#lcd2{margin-top:5px;font-size:23px;font-weight:700}
-#lcd.blink #lcd2::after{content:'▌';animation:blink 1s steps(2) infinite}
+#lcd2{margin-top:5px;font-size:22px;font-weight:700}
 #lcd.err #lcd1,#lcd.err #lcd2{color:#ff7a6a;text-shadow:0 0 9px rgba(255,90,70,.75)}
-@keyframes blink{50%{opacity:0}}
 #leds{display:flex;flex-direction:column;gap:8px;justify-content:center}
 .ledrow{display:flex;align-items:center;gap:6px;font:700 8.5px 'PT Sans';color:#5a5344;letter-spacing:.5px}
 .led{width:11px;height:11px;border-radius:50%;background:#3a382f;box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
@@ -300,61 +331,72 @@ button{touch-action:manipulation;font-family:inherit}
 @keyframes pulse{50%{opacity:.55}}
 
 /* принтер */
-#printer{width:182px;position:relative;height:88px;background:linear-gradient(#cbc4b4,#a9a190);
+#printer{width:176px;position:relative;height:88px;background:linear-gradient(#cbc4b4,#a9a190);
   border-radius:8px;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 #8a8270}
 #printer .plbl{position:absolute;bottom:16px;width:100%;text-align:center;font:700 8px 'PT Sans';color:#6a6352;letter-spacing:2px}
 #printer .slot{position:absolute;bottom:2px;left:10px;right:10px;height:9px;background:#1a1712;border-radius:2px;
   box-shadow:inset 0 2px 4px #000}
-#paperBox{position:absolute;bottom:10px;left:12px;width:158px;height:0;overflow:visible;z-index:2;pointer-events:none}
+#paperBox{position:absolute;bottom:10px;left:12px;width:152px;height:0;overflow:visible;z-index:2;pointer-events:none}
 #paper{position:absolute;bottom:0;left:0;width:100%;background:#fdfdf6;color:#2a2620;
-  font:10.5px/1.45 'PT Mono';padding:9px 10px 13px;box-shadow:0 4px 14px rgba(0,0,0,.4);
+  font:10px/1.45 'PT Mono';padding:9px 9px 13px;box-shadow:0 4px 14px rgba(0,0,0,.4);
   clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),96% 100%,92% calc(100% - 6px),88% 100%,84% calc(100% - 6px),80% 100%,76% calc(100% - 6px),72% 100%,68% calc(100% - 6px),64% 100%,60% calc(100% - 6px),56% 100%,52% calc(100% - 6px),48% 100%,44% calc(100% - 6px),40% 100%,36% calc(100% - 6px),32% 100%,28% calc(100% - 6px),24% 100%,20% calc(100% - 6px),16% 100%,12% calc(100% - 6px),8% 100%,4% calc(100% - 6px),0 100%)}
-#paper .pl{display:flex;justify-content:space-between;gap:8px}
+#paper .pl{display:flex;justify-content:space-between;gap:6px}
 #paper .pl.c{justify-content:center;text-align:center}
-#paper .b{font-weight:700;font-size:12px}
+#paper .b{font-weight:700;font-size:11.5px}
 #paper .sep{border-top:1px dashed #9a9488;margin:4px 0}
-#paper .bc{height:20px;margin:4px 6px 1px;
+#paper .bc{height:18px;margin:4px 6px 1px;
   background:repeating-linear-gradient(90deg,#1a1a1a 0 2px,transparent 2px 4px,#1a1a1a 4px 7px,transparent 7px 9px,#1a1a1a 9px 10px,transparent 10px 13px)}
-#paper .bcn{text-align:center;font-size:8px;letter-spacing:3px}
+#paper .bcn{text-align:center;font-size:7.5px;letter-spacing:3px}
+
+/* служебная панель */
+#kbStrip{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:10px}
+.k-strip{min-height:28px;border:none;border-radius:5px;cursor:pointer;position:relative;
+  font:700 8.5px 'PT Mono';letter-spacing:.5px;color:#dfe3e8;
+  background:linear-gradient(#6a7078,#484d54);
+  box-shadow:0 3px 0 #26292e,0 4px 6px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:filter .08s,transform .06s,box-shadow .06s}
+.k-strip:hover{filter:brightness(1.12)}
+.k-strip:active{transform:translateY(3px);box-shadow:0 0 0 #26292e,inset 0 1px 0 rgba(255,255,255,.2)}
+.k-strip.shake{animation:shakeX .3s}
 
 /* клавиши */
-#keys{display:grid;gap:11px;grid-template-columns:minmax(0,1.5fr) auto 178px;
+#keys{display:grid;gap:10px;grid-template-columns:minmax(0,1.62fr) auto 172px;
   grid-template-areas:"prod num fn" "prod num itog"}
-#kbProd{grid-area:prod;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:7px}
-#kbNum{grid-area:num;display:grid;grid-template-columns:repeat(3,62px);grid-template-rows:repeat(4,1fr);gap:7px}
+#kbProd{grid-area:prod;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);gap:6px}
+#kbNum{grid-area:num;display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(4,1fr);gap:7px}
 #kbFn{grid-area:fn;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);gap:7px}
-#keyItog{grid-area:itog;height:62px;font-size:18px;letter-spacing:5px;font-family:'Russo One';overflow:hidden}
+#keyItog{grid-area:itog;height:60px;font-size:18px;letter-spacing:5px;font-family:'Russo One';overflow:hidden}
 #keyItog::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;
   background:linear-gradient(105deg,transparent,rgba(255,255,255,.35),transparent);animation:sheen 4.5s infinite}
 @keyframes sheen{0%,55%{left:-60%}85%,100%{left:130%}}
-.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:44px;
+.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:42px;
   background:linear-gradient(#f6f1e3,#ddd6c2);color:#3a3428;
   box-shadow:0 4px 0 #9a927c,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 #fff;
   transition:filter .08s,transform .06s,box-shadow .06s;
   display:flex;flex-direction:column;align-items:center;justify-content:center}
 .key:hover{filter:brightness(1.07)}
 .key:active{transform:translateY(4px);box-shadow:0 0 0 #9a927c,0 1px 2px rgba(0,0,0,.2),inset 0 1px 0 #fff}
-.k-prod{padding-top:6px}
-.k-prod::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--pc,#888);
-  border-radius:7px 7px 0 0;opacity:.9}
-.k-prod .pi{font-size:13px;line-height:1}
-.k-prod b{font-size:10px;font-weight:700;letter-spacing:.2px;margin-top:1px}
-.k-prod em{font-style:normal;font:700 10px 'PT Mono';color:#8a4a20}
-.k-prod i{position:absolute;top:8px;left:5px;font:700 8px 'PT Mono';font-style:normal;color:#fdfdf6;
+.k-prod{padding-top:5px}
+.k-prod::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--pc,#888);
+  border-radius:7px 7px 0 0;opacity:.92}
+.k-prod .pi{font-size:12px;line-height:1}
+.k-prod b{font-size:8.5px;font-weight:700;letter-spacing:.1px;margin-top:1px}
+.k-prod em{font-style:normal;font:700 9px 'PT Mono';color:#8a4a20}
+.k-prod i{position:absolute;top:7px;left:4px;font:700 7.5px 'PT Mono';font-style:normal;color:#fdfdf6;
   background:#7a7260;border-radius:3px;padding:0 3px}
-#kbNum .key{font:700 21px 'PT Mono'}
-.k-slate{background:linear-gradient(#9aa3ad,#7c858f);color:#fff;box-shadow:0 4px 0 #565e68,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:10.5px;font-weight:700;letter-spacing:.5px}
-.k-red{background:linear-gradient(#c85648,#a83a2e);color:#fff;box-shadow:0 4px 0 #6e2018,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:11px;font-weight:700;letter-spacing:.5px}
-.k-amber{background:linear-gradient(#e0aa4a,#c08a2a);color:#3a2a08;box-shadow:0 4px 0 #7a5610,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:.5px}
-.k-teal{background:linear-gradient(#4aa0a0,#337f7f);color:#fff;box-shadow:0 4px 0 #1c4a4a,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:12.5px;font-weight:700;letter-spacing:1px}
-.k-blue{background:linear-gradient(#4a72b8,#33548f);color:#fff;box-shadow:0 4px 0 #1c2e52,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:12.5px;font-weight:700;letter-spacing:1px}
+#kbNum .key{font:700 20px 'PT Mono'}
+.k-slate{background:linear-gradient(#9aa3ad,#7c858f);color:#fff;box-shadow:0 4px 0 #565e68,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:10px;font-weight:700;letter-spacing:.4px}
+.k-red{background:linear-gradient(#c85648,#a83a2e);color:#fff;box-shadow:0 4px 0 #6e2018,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:10.5px;font-weight:700;letter-spacing:.4px}
+.k-amber{background:linear-gradient(#e0aa4a,#c08a2a);color:#3a2a08;box-shadow:0 4px 0 #7a5610,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:10.5px;font-weight:700;letter-spacing:.4px}
+.k-teal{background:linear-gradient(#4aa0a0,#337f7f);color:#fff;box-shadow:0 4px 0 #1c4a4a,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:12px;font-weight:700;letter-spacing:1px}
+.k-blue{background:linear-gradient(#4a72b8,#33548f);color:#fff;box-shadow:0 4px 0 #1c2e52,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:12px;font-weight:700;letter-spacing:1px}
 .k-green{background:linear-gradient(#4aa866,#2f7d48);color:#fff;box-shadow:0 4px 0 #18482a,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4)}
-.k-dark{background:linear-gradient(#565b62,#3a3f45);color:#cfd4da;box-shadow:0 4px 0 #22262b,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.25);font:700 10px 'PT Mono'}
+.k-dark{background:linear-gradient(#565b62,#3a3f45);color:#cfd4da;box-shadow:0 4px 0 #22262b,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.25);font:700 9.5px 'PT Mono'}
 .key.shake{animation:shakeX .3s}
 @keyframes shakeX{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .key.hint{animation:hintP 1.1s infinite}
 @keyframes hintP{50%{box-shadow:0 4px 0 #9a927c,0 0 20px 5px rgba(255,200,80,.9)}}
-.key.flash{animation:hintP .4s 2}
+.key.flash{animation:hintP .4s 3}
 
 /* ---- терминал ---- */
 #terminal{width:212px;background:linear-gradient(#2c3138,#1d2126);border-radius:12px;padding:12px;
@@ -441,13 +483,13 @@ button{touch-action:manipulation;font-family:inherit}
 .overlay{position:fixed;inset:0;z-index:100;background:rgba(10,8,6,.8);display:flex;align-items:center;
   justify-content:center;padding:18px;backdrop-filter:blur(2px);overflow-y:auto}
 .overlay.hidden{display:none}
-.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:560px;width:100%;padding:26px 32px;
+.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:580px;width:100%;padding:26px 32px;
   box-shadow:0 24px 60px rgba(0,0,0,.7),inset 0 0 0 2px #d8d0ba;position:relative;
   background-image:repeating-linear-gradient(0deg,transparent 0 26px,rgba(0,0,0,.03) 26px 27px);
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
 .card h1{font-family:'Russo One';font-size:23px;letter-spacing:1px;color:#8a3020;margin-bottom:4px}
 .card .sub{font:700 10.5px 'PT Sans';letter-spacing:3px;color:#8a8270;margin-bottom:16px}
-.card ol{margin:0 0 14px 20px;font-size:14px;line-height:1.7}
+.card ol{margin:0 0 14px 20px;font-size:13.5px;line-height:1.65}
 .card kbd{background:#26221c;color:#ffd97a;font:700 11px 'PT Mono';padding:2px 7px;border-radius:4px;
   box-shadow:0 2px 0 #000;margin:0 1px}
 .stamp{position:absolute;top:14px;right:16px;width:90px;height:90px;border:3px double rgba(176,48,38,.55);
@@ -472,9 +514,9 @@ button{touch-action:manipulation;font-family:inherit}
 #zEndPaper .sep{border-top:1px dashed #9a9488;margin:5px 0}
 
 /* ---------- планшет / узкий десктоп ---------- */
-@media (max-width:1180px){
+@media (max-width:1240px){
   .mug,.rolls{display:none}
-  #terminal{width:min(760px,94vw);display:flex;align-items:stretch;gap:10px;padding:10px 12px}
+  #terminal{width:min(820px,95vw);display:flex;align-items:stretch;gap:10px;padding:10px 12px}
   .t-top,.t-pad{display:none}
   #tScreen{flex:1;min-height:52px}
   .t-btns{flex-direction:column;margin:0;width:92px;gap:6px}
@@ -489,12 +531,13 @@ button{touch-action:manipulation;font-family:inherit}
   #hClock{font-size:14px}
   .hud-right{gap:6px}
   .hstat{padding:0 6px}.hstat i{font-size:7.5px}.hstat b{font-size:13px}
-  #scene{position:sticky;top:41px;z-index:40;flex:none;height:30vh;min-height:205px;
+  #scene{position:sticky;top:41px;z-index:40;flex:none;height:31vh;min-height:210px;
     box-shadow:0 8px 18px rgba(0,0,0,.55)}
-  .person{transform:scale(.66);transform-origin:bottom center}
-  .belt-item{transform:scale(.82);transform-origin:bottom center}
-  .belt-item:hover{transform:scale(.82)}
+  .person{transform:scale(.64);transform-origin:bottom center}
+  .belt-item{transform:scale(.74);transform-origin:bottom center}
+  .belt-item:hover{transform:scale(.74)}
   .belt-item.fly{transform:translate(110px,-24px) scale(.1)}
+  #beltItems{gap:5px}
   #sign{font-size:14px;letter-spacing:4px;padding:4px 12px 4px 16px;top:5%}
   .shelf{width:19%;height:36%;top:4%}
   #wclock{width:36px;height:36px;left:27%;top:8%}
@@ -504,31 +547,35 @@ button{touch-action:manipulation;font-family:inherit}
   #door{width:14%}
   #counter::after{font-size:7.5px;right:12%}
   .cone{width:130px}#cone1{left:calc(22% - 63px)}#cone2{left:calc(64% - 63px)}
+  #scanner{transform:scale(.85);transform-origin:bottom left}
+  #cashSpot{transform:scale(.85);transform-origin:bottom right;top:-14px}
   #deck{padding:12px 8px 18px;gap:10px}
   #regWrap{padding:9px 9px 11px;border-radius:14px;width:100%}
   #register{width:100%;padding:9px 9px 12px;border-radius:12px}
   .regBrand{display:none}
-  #regTop{gap:8px;margin-bottom:9px}
-  #lcd{min-height:56px;padding:6px 10px}
-  #lcd1{font-size:13px}#lcd2{font-size:17px}
+  #regTop{gap:8px;margin-bottom:8px}
+  #lcd{min-height:54px;padding:6px 10px}
+  #lcd1{font-size:12px}#lcd2{font-size:16px}
   #leds{gap:5px}.ledrow{font-size:7px;gap:4px}.led{width:9px;height:9px}
-  #printer{width:112px;height:70px}
-  #printer .plbl{font-size:6.5px;bottom:14px}
-  #paperBox{left:8px;width:96px}
-  #paper{font-size:8px;line-height:1.4;padding:6px 6px 9px}
-  #keys{grid-template-columns:1.15fr 1fr;gap:7px;
+  #printer{width:108px;height:66px}
+  #printer .plbl{font-size:6.5px;bottom:13px}
+  #paperBox{left:8px;width:92px}
+  #paper{font-size:7.5px;line-height:1.4;padding:6px 5px 8px}
+  #kbStrip{grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
+  .k-strip{min-height:30px;font-size:8px}
+  #keys{grid-template-columns:1.15fr 1fr;gap:6px;
     grid-template-areas:"prod prod" "num fn" "itog itog"}
-  #kbProd{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:6px}
-  #kbNum{grid-template-columns:repeat(3,1fr);gap:6px}
-  #kbNum .key{font-size:17px}
-  #kbFn{grid-template-columns:repeat(2,1fr);gap:6px}
-  .key{min-height:45px;border-radius:6px}
-  .k-prod .pi{font-size:11px}
-  .k-prod b{font-size:8px}
-  .k-prod em{font-size:8.5px}
-  .k-prod i{top:6px;left:3px;font-size:7px}
-  .k-slate,.k-red,.k-amber{font-size:9px}
-  .k-teal,.k-blue{font-size:10.5px}
+  #kbProd{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);gap:5px}
+  #kbNum{grid-template-columns:repeat(3,1fr);gap:5px}
+  #kbNum .key{font-size:16px}
+  #kbFn{grid-template-columns:repeat(2,1fr);gap:5px}
+  .key{min-height:44px;border-radius:6px}
+  .k-prod .pi{font-size:10px}
+  .k-prod b{font-size:7.5px}
+  .k-prod em{font-size:8px}
+  .k-prod i{top:5px;left:3px;font-size:6.5px}
+  .k-slate,.k-red,.k-amber{font-size:8.5px}
+  .k-teal,.k-blue{font-size:10px}
   #keyItog{height:54px;font-size:16px;letter-spacing:4px}
   #drawer{max-height:84vh;overflow-y:auto}
   .dr-body{flex-direction:column;gap:10px;padding:6px 12px 14px}
@@ -540,7 +587,7 @@ button{touch-action:manipulation;font-family:inherit}
   .dr-head .hintline{display:none}
   #toast{top:auto;bottom:calc(84vh + 8px);font-size:12px}
   .card{padding:20px 18px}
-  .card ol{font-size:13px}
+  .card ol{font-size:12.5px}
   .stamp{width:72px;height:72px;font-size:7px}
 }
 </style>
@@ -581,6 +628,7 @@ button{touch-action:manipulation;font-family:inherit}
     <div id="floor"></div>
     <div id="people"></div>
     <div id="counter">
+      <div id="scanner"><i class="sc-base"></i><i class="sc-body"></i><i class="sc-win"></i><i class="sc-led"></i></div>
       <div id="belt"></div>
       <div id="beltItems"></div>
       <div id="bagZone"><span id="bag">🛍️</span><span id="bagCount">0</span></div>
@@ -607,6 +655,7 @@ button{touch-action:manipulation;font-family:inherit}
             <div class="slot"></div>
           </div>
         </div>
+        <div id="kbStrip"></div>
         <div id="keys">
           <div id="kbProd"></div>
           <div id="kbNum"></div>
@@ -658,14 +707,14 @@ button{touch-action:manipulation;font-family:inherit}
     <div class="card">
       <div class="stamp">Продукты №7<br>утверждаю<br>директор</div>
       <h1>ПАМЯТКА КАССИРА</h1>
-      <div class="sub">ККМ «ЭЛЕКТРОН-95» · МАГАЗИН «ПРОДУКТЫ №7»</div>
+      <div class="sub">ККМ «ЭЛЕКТРОН-95» · 24 ТОВАРА · СКАНЕР ШТРИХ-КОДОВ</div>
       <ol>
-        <li>Товары на ленте вбивайте клавишами с ценниками (ПЛУ 1–12). Несколько штук — <kbd>цифра</kbd> затем товар.</li>
-        <li>Всё вбито — жмите <kbd>ИТОГ</kbd>. Табло покажет сумму.</li>
-        <li><b>Карта:</b> <kbd>КАРТА</kbd> → <kbd>ВВОД</kbd> на терминале. <b>Наличные:</b> <kbd>НАЛ</kbd> → наберите сумму с купюр → соберите сдачу из ящика и <kbd>ОТДАТЬ</kbd>.</li>
-        <li><kbd>ОТМЕНА</kbd> — убрать последний товар. <kbd>X</kbd> — промежуточный отчёт, <kbd>Z</kbd> — закрыть смену.</li>
+        <li><b>Скан:</b> кликните по товару на ленте — сканер считает штрих-код. Штрих-код <b>перечёркнут</b>? Вбейте вручную клавишей по PLU.</li>
+        <li>Несколько штук одного товара — <kbd>цифра</kbd> + клавиша товара. Всё вбито — <kbd>ИТОГ</kbd>.</li>
+        <li><b>Карта:</b> <kbd>КАРТА</kbd> → <kbd>ВВОД</kbd> на терминале.</li>
+        <li><b>Наличные:</b> клиент выложит купюры и монеты на прилавок — <b>заберите каждую кликом</b>. Затем соберите сдачу из ящика и нажмите <kbd>ОТДАТЬ</kbd>.</li>
+        <li><kbd>ОТМЕНА</kbd> — последний товар, <kbd>АННУЛ</kbd> — весь чек, <kbd>ПОИСК</kbd> — подсветить товары, <kbd>Z</kbd> — закрыть смену.</li>
       </ol>
-      <p style="font-size:12.5px;color:#6a6352;margin-bottom:16px">Подсказка: клик по товару на ленте подсветит его клавишу. Покупатели ждать не любят — следите за полоской терпения.</p>
       <button class="bigbtn" id="introStart">ПРИСТУПИТЬ К СМЕНЕ</button>
     </div>
   </div>
@@ -705,7 +754,13 @@ const PRODUCTS=[
  {id:5,name:'КОЛБАСА',price:310,icon:'🌭',pc:'#c97878'},{id:6,name:'МАКАРОНЫ',price:76,icon:'🍝',pc:'#d9b060'},
  {id:7,name:'ЧАЙ',price:135,icon:'🍵',pc:'#7fa060'},{id:8,name:'САХАР',price:58,icon:'🍬',pc:'#c9c2b2'},
  {id:9,name:'ГРЕЧКА',price:92,icon:'🌾',pc:'#967050'},{id:10,name:'МАСЛО',price:189,icon:'🧈',pc:'#e8cf80'},
- {id:11,name:'ВОДА',price:49,icon:'💧',pc:'#6aa8d9'},{id:12,name:'ШОКОЛАД',price:95,icon:'🍫',pc:'#7a5540'}];
+ {id:11,name:'ВОДА',price:49,icon:'💧',pc:'#6aa8d9'},{id:12,name:'ШОКОЛАД',price:95,icon:'🍫',pc:'#7a5540'},
+ {id:13,name:'КОФЕ',price:320,icon:'☕',pc:'#8a6a4f'},{id:14,name:'ПЕЧЕНЬЕ',price:78,icon:'🍪',pc:'#d0a870'},
+ {id:15,name:'ЯБЛОКИ',price:129,icon:'🍎',pc:'#c95a4a'},{id:16,name:'БАНАНЫ',price:96,icon:'🍌',pc:'#e8cf5f'},
+ {id:17,name:'ПОМИДОРЫ',price:159,icon:'🍅',pc:'#d04a3a'},{id:18,name:'ОГУРЦЫ',price:139,icon:'🥒',pc:'#6a9a4f'},
+ {id:19,name:'КУРИЦА',price:289,icon:'🍗',pc:'#d9a06a'},{id:20,name:'РИС',price:110,icon:'🍚',pc:'#d8d2c2'},
+ {id:21,name:'СОК',price:145,icon:'🧃',pc:'#e0923f'},{id:22,name:'КЕФИР',price:82,icon:'🥤',pc:'#b8c8d8'},
+ {id:23,name:'ХЛОПЬЯ',price:165,icon:'🥣',pc:'#c0803f'},{id:24,name:'БУМАГА',price:64,icon:'🧻',pc:'#b8b8c0'}];
 const prod=id=>PRODUCTS.find(p=>p.id===id);
 const BILLS=[5000,2000,1000,500,200,100,50], COINS=[10,5,2,1];
 const BC={5000:'#a8423a',2000:'#38619e',1000:'#2f7d68',500:'#6d4f9e',200:'#3f8f8f',100:'#b06a2f',50:'#4f5d9e'};
@@ -722,11 +777,13 @@ const BANKS=['#1f6f4f','#8f3f5f','#2f5f9f','#b0782f','#5a3a8f'];
 
 /* ---------- состояние ---------- */
 const G={state:'BOOT',shift:142,revenue:0,cashRev:0,cardRev:0,tips:0,checks:0,errors:0,rating:5,
-  customer:null,queue:[],belt:[],receipt:[],qtyBuf:null,typed:'',handed:[],tray:[],changeDue:0,
-  payMethod:null,printerBusy:false,muted:false,errorsThis:0,changeErr:0,svcStart:0,shiftStart:0,bagN:0};
+  customer:null,queue:[],belt:[],receipt:[],qtyBuf:null,handed:[],collected:0,taken:0,
+  tray:[],changeDue:0,payMethod:null,printerBusy:false,muted:false,errorsThis:0,changeErr:0,
+  svcStart:0,shiftStart:0,bagN:0};
 const cur=()=>G.customer;
 const total=()=>G.receipt.reduce((s,l)=>s+prod(l.pid).price*l.qty,0);
 const beltUnits=()=>G.belt.reduce((s,l)=>s+l.qty,0);
+const handedSum=()=>G.handed.reduce((a,b)=>a+b,0);
 
 /* ---------- звук ---------- */
 let AC=null;
@@ -737,7 +794,8 @@ function tone(f,d=.08,type='square',v=.12,w=0,slide=0){if(G.muted)return;try{con
  g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.03);}catch(e){}}
 const sfx={
  key:()=>tone(620,.045,'square',.06),
- scan:()=>{tone(1245,.07,'square',.1);tone(1245,.05,'square',.05,.09)},
+ scan:()=>{tone(1568,.05,'square',.09);tone(2093,.07,'square',.07,.06)},
+ scanFail:()=>{tone(220,.12,'sawtooth',.12);tone(180,.16,'sawtooth',.1,.09)},
  beep:()=>tone(880,.09,'sine',.12),
  soft:()=>tone(300,.07,'square',.06),
  err:()=>{tone(170,.22,'sawtooth',.15);tone(120,.26,'sawtooth',.11,.05)},
@@ -754,7 +812,7 @@ function lcd(a,b){$('#lcd1').textContent=a;$('#lcd2').textContent=b}
 function lcdErr(){$('#lcd').classList.add('err');setTimeout(()=>$('#lcd').classList.remove('err'),550)}
 function shakeReg(){const r=$('#register');r.classList.remove('shake');void r.offsetWidth;r.classList.add('shake')}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');
- clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1800)}
+ clearTimeout(t._tm);t._tm=setTimeout(()=>t.classList.remove('show'),1900)}
 function flashLED(){$('#ledErr').classList.add('on');setTimeout(()=>$('#ledErr').classList.remove('on'),650)}
 function hint(k,on){const el=document.querySelector(`[data-k="${k}"]`);if(el)el.classList.toggle('hint',on)}
 function clearHints(){document.querySelectorAll('.key.hint').forEach(e=>e.classList.remove('hint'))}
@@ -770,14 +828,16 @@ function setMood(c,m){if(c&&c.el)c.el.className=c.el.className.replace(/mood-\w+
 function floatAt(el,txt,color){const f=document.createElement('div');f.className='float';f.textContent=txt;
  if(color)f.style.color=color;f.style.left=(el.offsetLeft+10)+'px';f.style.bottom='46%';
  $('#scene').appendChild(f);setTimeout(()=>f.remove(),1500)}
-function flyChip(fromEl,html){const r=fromEl.getBoundingClientRect(),t=$('#trItems').getBoundingClientRect();
+function flyTo(fromEl,targetSel,html){const r=fromEl.getBoundingClientRect(),t=$(targetSel).getBoundingClientRect();
  const g=document.createElement('span');g.innerHTML=html;const el=g.firstChild;if(!el)return;
  el.classList.add('ghost');el.style.left=(r.left+r.width/2-26)+'px';el.style.top=(r.top+r.height/2-12)+'px';
  document.body.appendChild(el);
  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  el.style.transform=`translate(${t.left+t.width/2-(r.left+r.width/2)}px,${t.top+t.height/2-(r.top+r.height/2)}px) scale(.8)`;
-  el.style.opacity='.85'}));
+  el.style.transform=`translate(${t.left+t.width/2-(r.left+r.width/2)}px,${t.top+t.height/2-(r.top+r.height/2)}px) scale(.55)`;
+  el.style.opacity='.75'}));
  setTimeout(()=>el.remove(),480)}
+function cashHTML(d,cls){const c=d>=50?'cash':'coin';const col=d>=50?BC[d]:CC[d];
+ return `<span class="${c}${cls?' '+cls:''}" style="--bc:${col}">${d}</span>`}
 
 /* ---------- построение ---------- */
 function buildShelves(){['#shelfL','#shelfR'].forEach(id=>{const s=$(id);
@@ -796,7 +856,12 @@ function buildKeys(){
   ['drawer','ДЯЩИК','k-amber'],['nal','НАЛ','k-teal'],['card','КАРТА','k-blue'],
   ['x','X-ОТЧЁТ','k-dark'],['z','Z-ОТЧЁТ','k-dark']];
  $('#kbFn').innerHTML=FN.map(f=>`<button class="key ${f[2]}" data-k="${f[0]}">${f[1]}</button>`).join('');
+ const STRIP=[['rezh','РЕЖ'],['sekc','СЕКЦ'],['pi','ПИ'],['kor','КОР'],
+  ['anull','АННУЛ'],['vzv','ВЗВ'],['search','ПОИСК'],['kch','КЧ']];
+ $('#kbStrip').innerHTML=STRIP.map(f=>`<button class="k-strip" data-k="${f[0]}">${f[1]}</button>`).join('');
  $('#keys').addEventListener('click',e=>{const b=e.target.closest('.key');if(!b)return;
+  sfx.key();handleKey(b.dataset.k,b)});
+ $('#kbStrip').addEventListener('click',e=>{const b=e.target.closest('.k-strip');if(!b)return;
   sfx.key();handleKey(b.dataset.k,b)});}
 function buildDrawer(){
  const money=$('#drMoney');
@@ -810,11 +875,8 @@ function buildDrawer(){
  money.addEventListener('click',e=>{const s=e.target.closest('.slot');if(!s)return;
   if(G.state!=='CASH_CHANGE'){sfx.soft();return}
   const d=+s.dataset.d;G.tray.push(d);d>=50?sfx.cash():sfx.coin();
-  flyChip(s,cashHTML(d,true).replace(' pop',''));
+  flyTo(s,'#trItems',cashHTML(d,'mini').replace('pop',''));
   setTimeout(renderTray,360);});}
-function cashHTML(d,mini){return d>=50
- ?`<span class="cash${mini?' mini':''} pop" style="--bc:${BC[d]}">${d}</span>`
- :`<span class="coin${mini?' mini':''} pop" style="--bc:${CC[d]}">${d}</span>`}
 
 /* ---------- покупатели ---------- */
 const COUNTER_X=23, SLOTS=[42,57,72];
@@ -822,7 +884,7 @@ function makeCustomer(){
  const r=Math.random();
  const type=r<.42?'regular':r<.62?'hurry':r<.82?'babushka':'big';
  const c={type,name:pick(NAMES),pat:100,nag1:false,nag2:false,
-  patMax:type==='hurry'?40:type==='regular'?65:type==='babushka'?82:75,
+  patMax:type==='hurry'?40:type==='regular'?65:type==='babushka'?85:78,
   pay:(type==='babushka'?Math.random()<.75:Math.random()<.5)?'cash':'card'};
  const skin=pick(SKINS),hc=pick(HAIRS),sh=pick(SHIRTS);
  let hair='';
@@ -849,9 +911,11 @@ function serveNext(){if(G.state!=='IDLE')return;ensureQueue();
 function genItems(type){
  const n=type==='hurry'?rnd(1,2):type==='big'?rnd(4,6):rnd(2,4);
  const ids=[...PRODUCTS.map(p=>p.id)].sort(()=>Math.random()-.5).slice(0,n);
- return ids.map(id=>({pid:id,qty:type==='big'?rnd(1,3):(type==='babushka'&&Math.random()<.3?2:1)}))}
+ return ids.map(id=>({pid:id,
+  qty:type==='big'?rnd(1,3):(type==='babushka'&&Math.random()<.3?2:1),
+  sc:Math.random()>.16}))}
 function startService(c){G.customer=c;G.svcStart=Date.now();G.errorsThis=0;G.changeErr=0;
- G.receipt=[];G.qtyBuf=null;G.typed='';G.handed=[];G.payMethod=null;G.bagN=0;
+ G.receipt=[];G.qtyBuf=null;G.handed=[];G.collected=0;G.taken=0;G.payMethod=null;G.bagN=0;
  $('#bagCount').textContent='0';
  G.belt=genItems(c.type);renderBelt();
  c.pat=100;updateBar(c);setMood(c,'flat');
@@ -868,20 +932,37 @@ function leave(c,angry){G.state='IDLE';G.customer=null;
  setTimeout(()=>{c.el.style.left='112%';setTimeout(()=>c.el.remove(),1300)},angry?200:600);
  setTimeout(serveNext,angry?1300:1600)}
 
-/* ---------- лента ---------- */
+/* ---------- лента и сканер ---------- */
 function renderBelt(){const box=$('#beltItems');box.innerHTML='';
  G.belt.forEach(l=>{if(l.qty<=0)return;const p=prod(l.pid);
   const el=document.createElement('div');el.className='belt-item';el.dataset.pid=l.pid;
-  el.style.setProperty('--pc',p.pc);el.title='Подсветить клавишу';
-  el.innerHTML=`<span class="bi-ico">${p.icon}</span><span class="bi-name">${p.name}</span>
-   <span class="bi-price">${p.price}₽</span>${l.qty>1?`<span class="bi-qty">×${l.qty}</span>`:''}`;
-  el.addEventListener('click',()=>{const k=document.querySelector(`[data-k="p${l.pid}"]`);
-   if(k){k.classList.remove('flash');void k.offsetWidth;k.classList.add('flash');sfx.soft()}});
+  el.style.setProperty('--pc',p.pc);
+  el.innerHTML=`<span class="bi-plu">${l.pid}</span><span class="bi-ico">${p.icon}</span>
+   <span class="bi-name">${p.name}</span><span class="bi-price">${p.price}₽</span>
+   <span class="bi-bc${l.sc?'':' bad'}"></span>
+   ${l.qty>1?`<span class="bi-qty">×${l.qty}</span>`:''}`;
+  el.addEventListener('click',()=>scanItem(l.pid));
   box.appendChild(el)})}
 function beltEl(pid){return document.querySelector(`.belt-item[data-pid="${pid}"]`)}
+function scanItem(pid){
+ if(G.state!=='RINGING'){sfx.soft();return}
+ const line=G.belt.find(l=>l.pid===pid&&l.qty>0);if(!line)return;
+ const el=beltEl(pid),p=prod(pid);
+ if(!line.sc){ // штрих-код повреждён
+  sfx.scanFail();
+  if(el){el.classList.remove('nope');void el.offsetWidth;el.classList.add('nope')}
+  const c=cur();if(c)say(c,`«${p.name}» не читается! PLU ${pid}`);
+  const k=document.querySelector(`[data-k="p${pid}"]`);
+  if(k){k.classList.remove('flash');void k.offsetWidth;k.classList.add('flash')}
+  toast('Вбейте вручную: клавиша '+pid);return}
+ if(el){const lz=document.createElement('i');lz.className='laser';el.appendChild(lz);
+  setTimeout(()=>lz.remove(),300)}
+ const sc=$('#scanner');sc.classList.add('zap');setTimeout(()=>sc.classList.remove('zap'),260);
+ sfx.scan();
+ setTimeout(()=>ringProduct(pid),110)}
 
 /* ---------- логика кассы ---------- */
-function handleKey(k,btn){clearHints();
+function handleKey(k){clearHints();
  if(k.startsWith('p'))return ringProduct(+k.slice(1));
  if(k.startsWith('d'))return onDigit(k.slice(1));
  switch(k){
@@ -889,18 +970,19 @@ function handleKey(k,btn){clearHints();
   case 'nal':return nal();
   case 'card':return cardKey();
   case 'cancel':return cancel();
+  case 'anull':return anull();
+  case 'search':return searchKeys();
   case 'drawer':
    if(G.state==='CASH_CHANGE')toast('Ящик уже открыт — соберите сдачу');
    else{sfx.soft();toast('Ящик открывается при оплате')}return;
-  case 'kolvo':sfx.soft();toast('Количество: цифра на клавиатуре, затем товар');return;
+  case 'kolvo':sfx.soft();toast('Количество: цифра, затем клавиша товара');return;
   case 'price':shakeKey('price');sfx.soft();toast('Только администратор');return;
+  case 'vzv':shakeKey('vzv');sfx.soft();toast('Весы не подключены');return;
+  case 'rezh':case 'sekc':case 'pi':case 'kor':case 'kch':
+   shakeKey(k);sfx.soft();toast('Служебная клавиша — нужен ключ администратора');return;
   case 'x':return printX();
   case 'z':return tryZ();}}
 function onDigit(d){
- if(G.state==='CASH_ENTRY'){
-  if(G.typed.length>=5)return;
-  G.typed=(G.typed+d).replace(/^0+(?=\d)/,'').slice(0,5);
-  lcd('ПОЛУЧЕНО: '+G.typed,'НАЖМИТЕ НАЛ');$('#lcd').classList.add('blink');return}
  if(G.state==='RINGING'){
   const v=d==='00'?0:+d;
   G.qtyBuf=G.qtyBuf==null?v:Math.min(99,G.qtyBuf*10+v);
@@ -909,14 +991,14 @@ function onDigit(d){
  sfx.soft()}
 function ringProduct(pid){
  if(G.state!=='RINGING'){
-  if(G.state==='TOTAL')toast('Чек закрыт: оплата или ОТМЕНА');else sfx.soft();return}
+  if(G.state==='TOTAL'||G.state==='COLLECT')toast('Чек закрыт: оплата или ОТМЕНА');else sfx.soft();return}
  const line=G.belt.find(l=>l.pid===pid&&l.qty>0);
  if(!line){sfx.err();flashLED();shakeReg();lcdErr();G.errors++;updHUD();
   const c=cur();if(c){c.pat-=10;updateBar(c);say(c,pick(NOPE))}
   lcd('ОШИБКА ТОВАРА','СУММА '+total().toFixed(2));return}
  const n=Math.min(G.qtyBuf??1,line.qty);line.qty-=n;G.qtyBuf=null;
  const rl=G.receipt.find(r=>r.pid===pid);rl?rl.qty+=n:G.receipt.push({pid,qty:n});
- sfx.scan();$('#ledCheck').classList.add('on');
+ $('#ledCheck').classList.add('on');
  const p=prod(pid),el=beltEl(pid);
  if(line.qty>0){if(el){el.classList.add('zap');
    const q=el.querySelector('.bi-qty');q?q.textContent='×'+line.qty:
@@ -928,25 +1010,34 @@ function ringProduct(pid){
  lcd(`${p.name} ${n}×${p.price.toFixed(2)}`,'СУММА '+total().toFixed(2));
  if(beltUnits()===0){lcd('ЖМИТЕ ИТОГ ▸','СУММА '+total().toFixed(2));
   hint('itog',true);const c=cur();if(c)say(c,'Это всё. Сколько с меня?')}}
+function voidAll(){G.receipt.forEach(r=>{const bl=G.belt.find(l=>l.pid===r.pid);if(bl)bl.qty+=r.qty});
+ G.receipt=[];renderBelt();G.state='RINGING';G.qtyBuf=null;
+ $('#ledCheck').classList.remove('on');
+ lcd('АННУЛИРОВАНО','ТОВАРОВ: '+beltUnits());
+ const c=cur();if(c){c.pat-=6;updateBar(c);say(c,'Пересчитываем, секундочку...')}}
 function cancel(){
- if(G.state==='RINGING'&&G.receipt.length){
+ if(G.state==='COLLECT'){toast('Сначала заберите деньги, потом отменяйте чек');return}
+ if((G.state==='RINGING'||G.state==='TOTAL')&&G.receipt.length){
+  if(G.state==='TOTAL'){voidAll();tone(440,.12,'square',.09);return}
   const last=G.receipt[G.receipt.length-1];last.qty--;
   const bl=G.belt.find(l=>l.pid===last.pid);if(bl)bl.qty++;
   if(last.qty<=0)G.receipt.pop();
   tone(440,.08,'square',.08);renderBelt();
   $('#ledCheck').classList.toggle('on',G.receipt.length>0);
   lcd('ОТМЕНА ПОЗИЦИИ','СУММА '+total().toFixed(2));return}
- if(G.state==='TOTAL'){
-  G.receipt.forEach(r=>{const bl=G.belt.find(l=>l.pid===r.pid);if(bl)bl.qty+=r.qty});
-  G.receipt=[];renderBelt();G.state='RINGING';
-  $('#ledCheck').classList.remove('on');tone(440,.12,'square',.09);
-  lcd('ЧЕК АННУЛИРОВАН','ТОВАРОВ: '+beltUnits());
-  const c=cur();if(c){c.pat-=6;updateBar(c);say(c,'Пересчитываем, секундочку...')}return}
- if(G.state==='CASH_ENTRY'){G.typed='';G.state='TOTAL';$('#lcd').classList.remove('blink');
-  lcd('К ОПЛАТЕ',total().toFixed(2));return}
  sfx.soft()}
+function anull(){
+ if((G.state==='RINGING'||G.state==='TOTAL')&&G.receipt.length){
+  voidAll();tone(440,.16,'square',.1);toast('Чек полностью аннулирован')}
+ else sfx.soft()}
+function searchKeys(){
+ const lines=G.belt.filter(l=>l.qty>0);
+ if(!lines.length){sfx.soft();return}
+ lines.forEach(l=>{const k=document.querySelector(`[data-k="p${l.pid}"]`);
+  if(k){k.classList.remove('flash');void k.offsetWidth;k.classList.add('flash')}});
+ sfx.beep();toast('Нужные товары подсвечены')}
 function itog(){
- if(G.state==='TOTAL'){sfx.beep();lcd('К ОПЛАТЕ',total().toFixed(2));return}
+ if(G.state==='TOTAL'||G.state==='COLLECT'){sfx.beep();lcd('К ОПЛАТЕ',total().toFixed(2));return}
  if(G.state!=='RINGING'){sfx.soft();return}
  if(G.receipt.length===0){sfx.err();lcd('ЧЕК ПУСТ','—');toast('Сначала вбейте товары');return}
  if(beltUnits()>0){sfx.err();flashLED();shakeReg();lcdErr();
@@ -959,8 +1050,10 @@ function declare(){const c=cur();if(!c)return;
  if(c.pay==='card'){say(c,'Картой, пожалуйста 💳');
   $('#tL1').textContent='ОПЛАТА';$('#tL2').textContent=total()+' ₽ → ВВОД';
   hint('card',true)}
- else{say(c,c.type==='babushka'?'Вот, посчитайте...':'Вот, возьмите');
-  G.handed=genCash(total(),c.type);renderCash();hint('nal',true)}}
+ else{say(c,c.type==='babushka'?'Вот, забирайте...':'Вот, возьмите');
+  G.handed=genCash(total(),c.type);G.collected=0;G.taken=0;
+  renderCash();G.state='COLLECT';
+  lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`)}}
 function genCash(t,type){
  if(type==='babushka'&&Math.random()<.4){let rest=t,out=[];
   for(const b of BILLS)while(rest>=b){out.push(b);rest-=b}
@@ -971,36 +1064,50 @@ function genCash(t,type){
   if(b1&&t-b1>0){const b2=BILLS.filter(b=>b>=t-b1).pop();if(b2)return[b1,b2]}}
  return[single]}
 function renderCash(){const s=$('#cashSpot');s.innerHTML='';
- const sum=G.handed.reduce((a,b)=>a+b,0);
+ const sum=handedSum();
  G.handed.forEach((d,i)=>setTimeout(()=>{
-  s.insertAdjacentHTML('beforeend',cashHTML(d,true))},i*200));
+  const w=document.createElement('span');
+  w.className='hm';w.dataset.d=d;
+  w.style.transform=`rotate(${rnd(-7,7)}deg)`;
+  w.innerHTML=cashHTML(d,d>=50?'mid':'mid').replace('pop','pop');
+  w.classList.add('wait');
+  s.appendChild(w)},i*230));
  setTimeout(()=>s.insertAdjacentHTML('afterbegin',
-  `<span class="lbl pop">ПЕРЕДАНО ${sum} ₽</span>`),G.handed.length*200+100)}
-function nal(){
- if(G.state==='TOTAL'){
-  if(cur()&&cur().pay==='card'){toast('Клиент платит картой — жмите КАРТА');return}
-  G.state='CASH_ENTRY';G.typed='';$('#lcd').classList.add('blink');
-  lcd('ВВЕДИТЕ СУММУ','НАЖМИТЕ НАЛ');return}
- if(G.state==='CASH_ENTRY')return confirmCash();
- if(G.state==='RINGING'){toast('Сначала ИТОГ');return}
- sfx.soft()}
-function confirmCash(){
- const sum=G.handed.reduce((a,b)=>a+b,0),val=parseInt(G.typed||'0',10);
- if(val!==sum){sfx.err();flashLED();shakeReg();lcdErr();G.errors++;G.errorsThis++;updHUD();
-  const c=cur();if(c){c.pat-=12;updateBar(c);say(c,'Не та сумма! Пересчитайте купюры')}
-  G.typed='';lcd('ВВЕДИТЕ СУММУ','НАЖМИТЕ НАЛ');return}
- $('#lcd').classList.remove('blink');
- G.payMethod='cash';const change=sum-total();
- if(change===0){G.state='RECEIPT';const c=cur();if(c)say(c,'Под расчёт — удобно!');
+  `<span class="lbl pop">ПЕРЕДАНО ${sum} ₽</span>`),G.handed.length*230+120)}
+$('#cashSpot').addEventListener('click',e=>{
+ const el=e.target.closest('.hm');if(!el)return;
+ if(G.state!=='COLLECT'){sfx.soft();return}
+ const d=+el.dataset.d;
+ el.classList.remove('wait');el.classList.add('gone');
+ d>=50?sfx.cash():sfx.coin();
+ flyTo(el,'#lcd',el.innerHTML.replace(' pop',''));
+ setTimeout(()=>el.remove(),260);
+ G.collected+=d;G.taken++;
+ const sum=handedSum();
+ lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО ${G.collected} ИЗ ${sum}`);
+ if(G.taken===G.handed.length)setTimeout(finishCollect,480)});
+function finishCollect(){
+ if(G.state!=='COLLECT')return;
+ const sum=handedSum(),change=sum-total();
+ G.payMethod='cash';
+ if(change===0){G.state='RECEIPT';lcd('БЕЗ СДАЧИ',sum.toFixed(2));
+  const c=cur();if(c)say(c,'Под расчёт — удобно!');
   openDrawer();sfx.drawer();
   setTimeout(()=>{closeDrawer();printSale()},1100)}
  else{G.changeDue=change;G.tray=[];renderTray();G.state='CASH_CHANGE';
   lcd('СДАЧА',change.toFixed(2));openDrawer();sfx.drawer();
   const c=cur();if(c)say(c,'Сейчас сдачу отсчитаю...')}}
+function nal(){
+ if(G.state==='COLLECT'){
+  if(G.taken===G.handed.length)finishCollect();
+  else{sfx.err();toast('Сначала заберите все деньги с прилавка')}return}
+ if(G.state==='TOTAL'){toast('Клиент платит картой — жмите КАРТА');return}
+ if(G.state==='RINGING'){toast('Сначала ИТОГ');return}
+ sfx.soft()}
 /* карта */
 function cardKey(){
  if(G.state==='TOTAL'&&cur()&&cur().pay==='card')startCard();
- else if(G.state==='TOTAL')toast('Клиент платит наличными');
+ else if(G.state==='TOTAL'||G.state==='COLLECT')toast('Клиент платит наличными');
  else sfx.soft()}
 function startCard(){G.state='CARD';sfx.card();
  $('#tScreen').className='';$('#tL1').textContent='ПРИЛОЖИТЕ КАРТУ';
@@ -1014,8 +1121,10 @@ function resolveCard(){
  if(Math.random()<.12){
   $('#tScreen').className='bad';$('#tL1').textContent='ОТКЛОНЕНО ✗';$('#tL2').textContent='';
   sfx.err();const c=cur();if(c)say(c,'Ой... не проходит. Наличными давайте');
-  setTimeout(()=>{if(!cur())return;cur().pay='cash';G.handed=genCash(total(),cur().type);
-   renderCash();say(cur(),'Вот наличные, извините');resetTerm();G.state='TOTAL';hint('nal',true)},1400)}
+  setTimeout(()=>{if(!cur())return;cur().pay='cash';
+   G.handed=genCash(total(),cur().type);G.collected=0;G.taken=0;
+   renderCash();G.state='COLLECT';say(cur(),'Вот наличные, извините');
+   lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`);resetTerm()},1400)}
  else{$('#tScreen').className='ok';$('#tL1').textContent='ОДОБРЕНО ✓';
   $('#tL2').textContent=total()+' ₽';sfx.card();setTimeout(()=>sfx.chime(),250);
   G.payMethod='card';
@@ -1026,15 +1135,17 @@ $('#tOk').addEventListener('click',()=>{sfx.key();
  if(G.state==='TOTAL'&&cur()&&cur().pay==='card')startCard();
  else if(G.state==='TOTAL')toast('Клиент платит наличными');else sfx.soft()});
 $('#tNo').addEventListener('click',()=>{sfx.key();
- if(G.state==='CARD'){resetTerm();G.state='TOTAL';
-  const c=cur();if(c){c.pay='cash';G.handed=genCash(total(),c.type);renderCash();
-   say(c,'Ладно, давайте наличными');hint('nal',true)}}});
+ if(G.state==='CARD'){resetTerm();
+  const c=cur();if(c){c.pay='cash';G.handed=genCash(total(),c.type);
+   G.collected=0;G.taken=0;renderCash();G.state='COLLECT';
+   say(c,'Ладно, давайте наличными');
+   lcd('ЗАБИРАЙТЕ ДЕНЬГИ',`ВЗЯТО 0 ИЗ ${handedSum()}`)}}});
 
 /* ---------- ящик ---------- */
 function openDrawer(){$('#drawer').classList.add('open')}
 function closeDrawer(){$('#drawer').classList.remove('open')}
 function renderTray(){$('#trNeed').textContent=G.changeDue;
- $('#trItems').innerHTML=G.tray.map(d=>cashHTML(d,true)).join('');
+ $('#trItems').innerHTML=G.tray.map(d=>cashHTML(d,'mini pop')).join('');
  const s=G.tray.reduce((a,b)=>a+b,0),el=$('#trSum');el.textContent=s;
  el.className=s===G.changeDue?'match':s>G.changeDue?'over':''}
 $('#trUndo').addEventListener('click',()=>{sfx.key();G.tray.pop();renderTray()});
@@ -1061,7 +1172,7 @@ function receiptHTML(){const now=new Date();
   return `<div class="pl"><span>${p.name}${l.qty>1?' x'+l.qty:''}</span><span>${(p.price*l.qty).toFixed(2)}</span></div>`}).join('');
  const tot=total();let pay='';
  if(G.payMethod==='card')pay=`<div class="pl"><span>ОПЛАТА КАРТОЙ</span><span>${tot.toFixed(2)}</span></div>`;
- else{const r=G.handed.reduce((a,b)=>a+b,0);
+ else{const r=handedSum();
   pay=`<div class="pl"><span>НАЛИЧНЫМИ</span><span>${r.toFixed(2)}</span></div>
    <div class="pl"><span>СДАЧА</span><span>${(r-tot).toFixed(2)}</span></div>`}
  return `<div class="pl c b">ООО «ПРОДУКТЫ №7»</div>
@@ -1100,7 +1211,7 @@ function printPaper(html,dur,cb){if(G.printerBusy){toast('Принтер зан�
    G.printerBusy=false;if(cb)cb()},520)},dur*1000+150)}
 function printSale(mood='happy'){G.state='RECEIPT';clearHints();
  $('#ledCheck').classList.remove('on');lcd('СПАСИБО','ИТОГ '+total().toFixed(2));
- printPaper(receiptHTML(),.6+G.receipt.length*.14,()=>finishCustomer(mood))}
+ printPaper(receiptHTML(),.6+G.receipt.length*.12,()=>finishCustomer(mood))}
 function printX(){if(G.printerBusy){toast('Принтер занят');return}
  sfx.beep();printPaper(reportHTML('x'),1.1,null);toast('X-отчёт напечатан')}
 function tryZ(){if(G.state!=='IDLE'){toast('Дослужите покупателя — Z только в паузе');return}
@@ -1118,7 +1229,7 @@ function finishCustomer(mood){const c=cur();if(!c)return;
  if(G.payMethod==='cash')G.cashRev+=tot;else G.cardRev+=tot;
  G.checks++;
  const elapsed=Date.now()-G.svcStart;
- if(mood==='happy'&&elapsed<25000&&G.errorsThis===0){
+ if(mood==='happy'&&elapsed<28000&&G.errorsThis===0){
   const tip=Math.max(5,Math.round(tot*.06/5)*5);G.tips+=tip;
   G.rating=Math.min(5,G.rating+.05);sfx.chime();
   floatAt(c.el,'+'+tip+' ₽ ЧАЕВЫЕ')}
@@ -1133,7 +1244,7 @@ function angryLeave(){const c=cur();if(!c)return;sfx.angry();
 
 /* ---------- циклы ---------- */
 setInterval(()=>{const c=cur();
- if(!c||!['RINGING','TOTAL','CASH_ENTRY','CASH_CHANGE','CARD','CARD_PROC'].includes(G.state))return;
+ if(!c||!['RINGING','TOTAL','COLLECT','CASH_CHANGE','CARD','CARD_PROC'].includes(G.state))return;
  c.pat-=100/(c.patMax*5);updateBar(c);
  if(c.pat<30)setMood(c,'sad');
  if(!c.nag1&&c.pat<55){c.nag1=true;say(c,pick(NAG))}
@@ -1142,13 +1253,11 @@ setInterval(()=>{const c=cur();
 setInterval(()=>{if(!G.shiftStart)return;
  const s=Math.floor((Date.now()-G.shiftStart)/1000);
  $('#hClock').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000);
-/* часы на стене */
 function tickClock(){const n=new Date(),h=n.getHours()%12,m=n.getMinutes(),s=n.getSeconds();
  const w=document.querySelectorAll('.wh');if(w.length<3)return;
  w[0].style.transform=`rotate(${h*30+m/2}deg)`;w[1].style.transform=`rotate(${m*6+s/10}deg)`;
  w[2].style.transform=`rotate(${s*6}deg)`}
 setInterval(tickClock,1000);tickClock();
-/* моргание */
 setInterval(()=>{const ps=[...document.querySelectorAll('.person:not(.rush)')];if(!ps.length)return;
  const p=pick(ps);p.classList.add('blink');setTimeout(()=>p.classList.remove('blink'),160);
  if(Math.random()<.4)setTimeout(()=>{p.classList.add('blink');
@@ -1157,7 +1266,7 @@ setInterval(()=>{const ps=[...document.querySelectorAll('.person:not(.rush)')];i
 /* ---------- смена ---------- */
 function newShift(){G.shift++;G.revenue=0;G.cashRev=0;G.cardRev=0;G.tips=0;G.checks=0;
  G.errors=0;G.rating=5;G.errorsThis=0;G.changeErr=0;G.receipt=[];G.belt=[];
- G.handed=[];G.tray=[];G.qtyBuf=null;G.typed='';G.customer=null;
+ G.handed=[];G.tray=[];G.qtyBuf=null;G.customer=null;
  $('#people').innerHTML='';G.queue=[];updHUD();
  $('#hShift').textContent='СМЕНА №'+G.shift;
  G.shiftStart=Date.now();G.state='IDLE';lcd('КАССА ГОТОВА','0.00');
