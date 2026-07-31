@@ -41,7 +41,7 @@ button{touch-action:manipulation;font-family:inherit}
 .hbtn:hover{background:#443d31;transform:translateY(-1px)}
 
 /* ================= СЦЕНА ================= */
-#scene{position:relative;flex:1;min-height:380px;overflow:hidden;
+#scene{position:relative;flex:1;min-height:340px;overflow:hidden;
   background:linear-gradient(#2c4b41 0%,#223b33 52%,#1a2b25 100%)}
 #scene::before{content:'';position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;
   background:repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 2px,transparent 2px 74px),
@@ -53,10 +53,10 @@ button{touch-action:manipulation;font-family:inherit}
   box-shadow:inset 0 8px 14px rgba(0,0,0,.55)}
 #floor::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:rgba(255,255,255,.06)}
 
-.ticker{position:absolute;top:1.5%;left:50%;transform:translateX(-50%);width:46%;max-width:600px;
+.ticker{position:absolute;top:1.5%;left:50%;transform:translateX(-50%);width:46%;max-width:640px;
   background:#140e08;border:3px solid #3a2c20;border-radius:6px;overflow:hidden;z-index:3;
   box-shadow:0 4px 12px rgba(0,0,0,.4)}
-.tk{display:flex;white-space:nowrap;animation:tick 24s linear infinite;
+.tk{display:flex;white-space:nowrap;animation:tick 26s linear infinite;
   font:700 12px 'PT Mono';color:#ffb02e;text-shadow:0 0 8px rgba(255,176,46,.75);padding:5px 0;letter-spacing:1px}
 .tk span{padding-right:48px}
 @keyframes tick{to{transform:translateX(-50%)}}
@@ -135,7 +135,7 @@ button{touch-action:manipulation;font-family:inherit}
 
 /* ---- покупатели ---- */
 #people{position:absolute;inset:0;z-index:4;pointer-events:none}
-.person{position:absolute;bottom:calc(35% - 50px);width:106px;transition:left 1s ease;pointer-events:auto}
+.person{position:absolute;bottom:calc(35% - 50px);width:106px;transition:left 1s ease;pointer-events:auto;cursor:pointer}
 .person.rush{transition:left .6s ease-in}
 .person.walk .p-in{animation-duration:.45s}
 .p-in{display:flex;flex-direction:column;align-items:center;animation:bob 2.6s ease-in-out infinite}
@@ -237,7 +237,7 @@ button{touch-action:manipulation;font-family:inherit}
   box-shadow:0 0 12px 3px rgba(255,40,24,.85);animation:laserScan .28s ease-in-out forwards;pointer-events:none}
 @keyframes laserScan{0%{top:10%;opacity:0}18%{opacity:1}82%{opacity:1}100%{top:82%;opacity:0}}
 
-#scanner{position:absolute;left:1.4%;top:-34px;width:60px;height:42px;z-index:6}
+#scanner{position:absolute;left:1.4%;top:-34px;width:60px;height:42px;z-index:6;cursor:pointer}
 .sc-base{position:absolute;bottom:-4px;left:10px;width:34px;height:8px;background:#171a1f;border-radius:3px;
   box-shadow:0 2px 4px rgba(0,0,0,.5)}
 .sc-body{position:absolute;left:8px;bottom:2px;width:43px;height:27px;transform:rotate(-9deg);
@@ -248,7 +248,7 @@ button{touch-action:manipulation;font-family:inherit}
 #scanner.zap .sc-win{background:#ff3a28;box-shadow:0 0 16px 4px rgba(255,60,40,.95)}
 .sc-led{position:absolute;right:10px;top:13px;width:4px;height:4px;border-radius:50%;background:#37e06a;animation:pulse 2.4s infinite}
 
-#bagZone{position:absolute;right:5%;top:-70px;text-align:center;z-index:6}
+#bagZone{position:absolute;right:5%;top:-70px;text-align:center;z-index:6;cursor:pointer}
 #bag{font-size:48px;display:block;filter:drop-shadow(2px 3px 3px rgba(0,0,0,.4))}
 #bagCount{font:700 13px 'PT Mono';color:#ffd97a;background:rgba(0,0,0,.45);padding:1px 9px;border-radius:8px}
 #bagCount.bump{animation:bump .3s}
@@ -292,7 +292,7 @@ button{touch-action:manipulation;font-family:inherit}
   border-top:4px solid #4a3826;box-shadow:inset 0 14px 24px rgba(0,0,0,.5)}
 #regWrap{position:relative;background:#1b1e23;border-radius:20px;padding:15px 19px 17px;
   box-shadow:inset 0 3px 8px rgba(0,0,0,.7),inset 0 -2px 0 rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.45)}
-.scale{position:absolute;left:-128px;bottom:10px;width:106px;z-index:1}
+.scale{position:absolute;left:-128px;bottom:10px;width:106px;z-index:1;cursor:pointer}
 .sl-plat{width:90px;height:10px;margin:0 auto;background:linear-gradient(#ccd0d6,#98a0a8);border-radius:3px;
   box-shadow:0 2px 3px rgba(0,0,0,.4)}
 .sl-body{width:106px;height:46px;background:linear-gradient(#e8e2d4,#beb7a6);border-radius:7px;margin-top:-2px;
@@ -301,12 +301,12 @@ button{touch-action:manipulation;font-family:inherit}
   font:700 13px 'PT Mono';color:#7dff9b;text-shadow:0 0 6px rgba(125,255,155,.6);
   display:flex;align-items:center;justify-content:center;letter-spacing:1px}
 .sl-lbl{text-align:center;font:700 7.5px 'PT Sans';color:#6a6352;letter-spacing:2px;margin-top:3px}
-.mug{position:absolute;right:-72px;bottom:14px;width:46px;height:42px;z-index:1;
+.mug{position:absolute;right:-72px;bottom:14px;width:46px;height:42px;z-index:1;cursor:pointer;
   background:linear-gradient(#c05040,#8a3225);border-radius:5px 5px 9px 9px;box-shadow:0 4px 8px rgba(0,0,0,.5)}
 .mug::after{content:'';position:absolute;right:-13px;top:8px;width:15px;height:18px;
   border:5px solid #a04434;border-left:none;border-radius:0 11px 11px 0}
 .steam{position:absolute;top:-15px;width:5px;height:15px;border-radius:4px;background:rgba(255,255,255,.4);
-  filter:blur(2px);animation:steamUp 2.6s infinite}
+  filter:blur(2px);animation:steamUp 2.6s infinite;pointer-events:none}
 .steam.s1{left:10px}.steam.s2{left:26px;animation-delay:-1.3s}
 @keyframes steamUp{0%{transform:translateY(5px) scaleY(.5);opacity:0}30%{opacity:.75}
  100%{transform:translateY(-17px) translateX(4px) scaleY(1.25);opacity:0}}
@@ -353,7 +353,9 @@ button{touch-action:manipulation;font-family:inherit}
 
 /* принтер */
 #printer{width:190px;position:relative;height:92px;background:linear-gradient(#cbc4b4,#a9a190);
-  border-radius:8px;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 #8a8270}
+  border-radius:8px;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -4px 0 #8a8270;cursor:pointer;
+  transition:filter .12s}
+#printer:hover{filter:brightness(1.05)}
 #printer .plbl{position:absolute;bottom:16px;width:100%;text-align:center;font:700 8px 'PT Sans';color:#6a6352;letter-spacing:2px}
 #printer .slot{position:absolute;bottom:2px;left:10px;right:10px;height:9px;background:#1a1712;border-radius:2px;
   box-shadow:inset 0 2px 4px #000}
@@ -383,32 +385,34 @@ button{touch-action:manipulation;font-family:inherit}
 .k-strip:active{transform:translateY(3px);box-shadow:0 0 0 #26292e,inset 0 1px 0 rgba(255,255,255,.2)}
 .k-strip.shake{animation:shakeX .3s}
 
-/* клавиши */
-#keys{display:grid;gap:11px;grid-template-columns:minmax(0,1.62fr) auto 190px;
-  grid-template-areas:"prod num fn" "prod num itog"}
-#kbProd{grid-area:prod;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);gap:7px}
+/* клавиши: большое товарное поле + нижний ряд */
+#keys{display:flex;flex-direction:column;gap:10px}
+#kbProd{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(5,1fr);gap:6px}
+#kbRow2{display:grid;gap:10px;grid-template-columns:auto 202px;grid-template-areas:"num fn" "num itog"}
 #kbNum{grid-area:num;display:grid;grid-template-columns:repeat(3,70px);grid-template-rows:repeat(4,1fr);gap:7px}
 #kbFn{grid-area:fn;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,1fr);gap:7px}
-#keyItog{grid-area:itog;height:66px;font-size:19px;letter-spacing:5px;font-family:'Russo One';overflow:hidden}
+#keyItog{grid-area:itog;height:62px;font-size:19px;letter-spacing:5px;font-family:'Russo One';overflow:hidden}
 #keyItog::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:40%;
   background:linear-gradient(105deg,transparent,rgba(255,255,255,.35),transparent);animation:sheen 4.5s infinite}
 @keyframes sheen{0%,55%{left:-60%}85%,100%{left:130%}}
-.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:50px;
+.key{border:none;border-radius:7px;cursor:pointer;font-family:'PT Sans';position:relative;min-height:38px;
   background:linear-gradient(#f6f1e3,#ddd6c2);color:#3a3428;
   box-shadow:0 4px 0 #9a927c,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 #fff;
   transition:filter .08s,transform .06s,box-shadow .06s;
   display:flex;flex-direction:column;align-items:center;justify-content:center}
 .key:hover{filter:brightness(1.07)}
 .key:active{transform:translateY(4px);box-shadow:0 0 0 #9a927c,0 1px 2px rgba(0,0,0,.2),inset 0 1px 0 #fff}
-.k-prod{padding-top:6px}
+.k-prod{padding-top:5px}
 .k-prod::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--pc,#888);
   border-radius:7px 7px 0 0;opacity:.92}
-.k-prod .pi{font-size:15px;line-height:1}
-.k-prod b{font-size:10px;font-weight:700;letter-spacing:.1px;margin-top:1px}
-.k-prod em{font-style:normal;font:700 10px 'PT Mono';color:#8a4a20}
-.k-prod i{position:absolute;top:8px;left:4px;font:700 8px 'PT Mono';font-style:normal;color:#fdfdf6;
+.k-prod .prow{display:flex;align-items:center;gap:3px;max-width:100%}
+.k-prod .pi{font-size:13px;line-height:1}
+.k-prod b{font-size:8.5px;font-weight:700;letter-spacing:.1px;line-height:1.05;overflow:hidden;white-space:nowrap}
+.k-prod em{font-style:normal;font:700 9px 'PT Mono';color:#8a4a20;margin-top:1px}
+.k-prod i{position:absolute;top:7px;left:4px;font:700 7.5px 'PT Mono';font-style:normal;color:#fdfdf6;
   background:#7a7260;border-radius:3px;padding:0 3px}
-#kbNum .key{font:700 22px 'PT Mono'}
+#kbNum .key{font:700 22px 'PT Mono';min-height:50px}
+#kbFn .key{min-height:48px}
 .k-slate{background:linear-gradient(#9aa3ad,#7c858f);color:#fff;box-shadow:0 4px 0 #565e68,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:.4px}
 .k-red{background:linear-gradient(#c85648,#a83a2e);color:#fff;box-shadow:0 4px 0 #6e2018,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.4);font-size:11.5px;font-weight:700;letter-spacing:.4px}
 .k-amber{background:linear-gradient(#e0aa4a,#c08a2a);color:#3a2a08;box-shadow:0 4px 0 #7a5610,0 6px 9px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);font-size:11.5px;font-weight:700;letter-spacing:.4px}
@@ -429,13 +433,18 @@ button{touch-action:manipulation;font-family:inherit}
 #tScreen{background:#081826;border:3px solid #0e0f12;border-radius:6px;padding:12px 8px;text-align:center;
   min-height:70px;display:flex;flex-direction:column;justify-content:center;box-shadow:inset 0 0 14px rgba(0,0,0,.8)}
 #tL1{font:700 12px 'PT Mono';color:#6fd7ff;letter-spacing:1px;text-shadow:0 0 7px rgba(111,215,255,.6)}
-#tL2{font:700 18px 'PT Mono';color:#aee8ff;margin-top:4px;text-shadow:0 0 8px rgba(174,232,255,.5)}
+#tL2{font:700 18px 'PT Mono';color:#aee8ff;margin-top:4px;text-shadow:0 0 8px rgba(174,232,255,.5);letter-spacing:3px}
 #tScreen.ok #tL1{color:#7dff9b;text-shadow:0 0 8px rgba(125,255,155,.7)}
 #tScreen.bad #tL1{color:#ff6a5a;text-shadow:0 0 8px rgba(255,106,90,.7)}
 #tScreen.dots #tL2::after{content:'';animation:dots 1.2s steps(4) infinite}
 @keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
 .t-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 4px}
-.t-dot{height:14px;border-radius:7px;background:#3a4048;box-shadow:inset 0 2px 3px rgba(0,0,0,.6)}
+.t-dot{height:20px;border-radius:6px;background:#3a4048;border:none;cursor:pointer;
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.08);
+  font:700 9px 'PT Mono';color:#7a828c;display:flex;align-items:center;justify-content:center;transition:.1s}
+.t-dot:hover{background:#454c56}
+.t-dot:active{transform:scale(.9)}
+.t-dot.press{background:#6fd7ff;color:#081826;box-shadow:0 0 10px rgba(111,215,255,.85)}
 .t-btns{display:flex;gap:8px;margin-bottom:10px}
 .tbtn{flex:1;border:none;border-radius:7px;padding:11px 0;font:700 11px 'PT Sans';letter-spacing:1px;cursor:pointer;transition:.1s}
 .tbtn:active{transform:translateY(2px)}
@@ -460,7 +469,8 @@ button{touch-action:manipulation;font-family:inherit}
 #drawer.open{transform:translateY(0)}
 .dr-head{display:flex;align-items:center;gap:12px;padding:9px 20px 4px;font:700 11px 'PT Sans';
   letter-spacing:2px;color:#3a3f45}
-.dr-head .lock{margin-left:auto;font-size:15px}
+#drLock{margin-left:auto;font-size:16px;background:none;border:none;cursor:pointer;transition:transform .15s}
+#drLock:hover{transform:scale(1.2) rotate(-8deg)}
 .dr-head .hintline{font:400 11px 'PT Sans';letter-spacing:0;color:#565b62}
 .dr-body{display:flex;gap:16px;padding:8px 20px 18px;flex-wrap:wrap}
 #drMoney{flex:1;min-width:360px;background:#22262b;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;
@@ -507,7 +517,7 @@ button{touch-action:manipulation;font-family:inherit}
 .overlay{position:fixed;inset:0;z-index:100;background:rgba(10,8,6,.8);display:flex;align-items:center;
   justify-content:center;padding:18px;backdrop-filter:blur(2px);overflow-y:auto}
 .overlay.hidden{display:none}
-.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:600px;width:100%;padding:26px 32px;
+.card{background:#f4efe0;color:#2a2620;border-radius:6px;max-width:620px;width:100%;padding:26px 32px;
   box-shadow:0 24px 60px rgba(0,0,0,.7),inset 0 0 0 2px #d8d0ba;position:relative;
   background-image:repeating-linear-gradient(0deg,transparent 0 26px,rgba(0,0,0,.03) 26px 27px);
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
@@ -541,7 +551,8 @@ button{touch-action:manipulation;font-family:inherit}
 @media (max-width:1360px){
   .mug,.rolls,.scale{display:none}
   #terminal{width:min(920px,95vw);display:flex;align-items:stretch;gap:10px;padding:10px 12px}
-  .t-top,.t-pad{display:none}
+  .t-top{display:none}
+  .t-pad{margin:0 6px;align-self:center}
   #tScreen{flex:1;min-height:52px}
   .t-btns{flex-direction:column;margin:0;width:96px;gap:6px}
   .t-slot{width:90px;height:auto;min-height:52px}
@@ -562,7 +573,7 @@ button{touch-action:manipulation;font-family:inherit}
   .belt-item:hover{transform:scale(.72)}
   .belt-item.fly{transform:translate(110px,-24px) scale(.1)}
   #beltItems{gap:5px}
-  .ticker{width:72%;font-size:9px}
+  .ticker{width:72%}
   .tk{font-size:9px}
   #sign{font-size:14px;letter-spacing:4px;padding:4px 12px 4px 16px;top:5%}
   .shelf{width:19%;height:34%;top:4%}
@@ -589,17 +600,18 @@ button{touch-action:manipulation;font-family:inherit}
   #paper{font-size:7.5px;line-height:1.4;padding:6px 5px 8px}
   #kbStrip{grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px}
   .k-strip{min-height:30px;font-size:8px}
-  #keys{grid-template-columns:1.15fr 1fr;gap:6px;
-    grid-template-areas:"prod prod" "num fn" "itog itog"}
-  #kbProd{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);gap:5px}
-  #kbNum{grid-template-columns:repeat(3,1fr);gap:5px}
-  #kbNum .key{font-size:16px}
-  #kbFn{grid-template-columns:repeat(2,1fr);gap:5px}
-  .key{min-height:44px;border-radius:6px}
-  .k-prod .pi{font-size:10px}
+  #kbProd{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(10,1fr);gap:5px}
+  .k-prod{min-height:42px}
+  .k-prod .pi{font-size:11px}
   .k-prod b{font-size:7.5px}
   .k-prod em{font-size:8px}
   .k-prod i{top:5px;left:3px;font-size:6.5px}
+  #kbRow2{grid-template-columns:1.15fr 1fr;grid-template-areas:"num fn" "itog itog";gap:6px}
+  #kbNum{grid-template-columns:repeat(3,1fr);gap:5px}
+  #kbNum .key{font-size:16px;min-height:44px}
+  #kbFn{grid-template-columns:repeat(2,1fr);gap:5px}
+  #kbFn .key{min-height:44px}
+  .key{border-radius:6px}
   .k-slate,.k-red,.k-amber{font-size:8.5px}
   .k-teal,.k-blue{font-size:10px}
   #keyItog{height:54px;font-size:16px;letter-spacing:4px}
@@ -640,8 +652,8 @@ button{touch-action:manipulation;font-family:inherit}
 
   <main id="scene">
     <div class="ticker"><div class="tk">
-      <span>★ АКЦИЯ −30% НА ВСЁ ★ ВЕСОВОЙ ТОВАР — СНАЧАЛА «ВЗВ» ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ КОФЕ 2 ПО ЦЕНЕ 1 ★ ВОЗВРАТ — ЧЕРЕЗ «АННУЛ» НЕ НУЖЕН, ЕСТЬ ЧЕК ВОЗВРАТА</span>
-      <span>★ АКЦИЯ −30% НА ВСЁ ★ ВЕСОВОЙ ТОВАР — СНАЧАЛА «ВЗВ» ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ КОФЕ 2 ПО ЦЕНЕ 1 ★ ВОЗВРАТ — ЧЕРЕЗ «АННУЛ» НЕ НУЖЕН, ЕСТЬ ЧЕК ВОЗВРАТА</span>
+      <span>★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО · КАРТОФЕЛЬ · КОЛА ★ САЛО И КАРТОФЕЛЬ — НА ВЕС, ЧЕРЕЗ «ВЗВ» ★ АКЦИЯ −30% НА ВСЁ ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ ПЕЛЬМЕНИ «СИБИРСКИЕ» — 260 ₽</span>
+      <span>★ НОВИНКИ: МИЛКА · ЧИПСЫ · САЛО · КАРТОФЕЛЬ · КОЛА ★ САЛО И КАРТОФЕЛЬ — НА ВЕС, ЧЕРЕЗ «ВЗВ» ★ АКЦИЯ −30% НА ВСЁ ★ СВЕЖИЙ ХЛЕБ КАЖДЫЕ УТРО ★ ПЕЛЬМЕНИ «СИБИРСКИЕ» — 260 ₽</span>
     </div></div>
     <div class="shelf" id="shelfL"></div>
     <div class="shelf" id="shelfR"></div>
@@ -668,8 +680,8 @@ button{touch-action:manipulation;font-family:inherit}
 
   <section id="deck">
     <div id="regWrap">
-      <div class="scale"><div class="sl-plat"></div><div class="sl-body"><div class="sl-disp" id="slDisp">0.000</div></div><div class="sl-lbl">ВЕСЫ · ПВ-3М</div></div>
-      <div class="mug"><span class="steam s1"></span><span class="steam s2"></span></div>
+      <div class="scale" id="scale" title="Клик — сброс тары"><div class="sl-plat"></div><div class="sl-body"><div class="sl-disp" id="slDisp">0.000</div></div><div class="sl-lbl">ВЕСЫ · ПВ-3М</div></div>
+      <div class="mug" title="Кружка завмага"><span class="steam s1"></span><span class="steam s2"></span></div>
       <div class="rolls"><div class="roll r1"></div><div class="roll r2"></div></div>
       <div id="register">
         <div id="regTop">
@@ -680,7 +692,7 @@ button{touch-action:manipulation;font-family:inherit}
             <div class="ledrow"><span class="led a" id="ledCheck"></span>ЧЕК</div>
             <div class="ledrow"><span class="led r" id="ledErr"></span>ОШИБКА</div>
           </div>
-          <div id="printer">
+          <div id="printer" title="Клик — тест печати">
             <div id="paperBox"><div id="paper"></div></div>
             <div class="plbl">ПЕЧАТЬ ЧЕКА</div>
             <div class="slot"></div>
@@ -689,9 +701,11 @@ button{touch-action:manipulation;font-family:inherit}
         <div id="kbStrip"></div>
         <div id="keys">
           <div id="kbProd"></div>
-          <div id="kbNum"></div>
-          <div id="kbFn"></div>
-          <button id="keyItog" class="key k-green" data-k="itog">ИТОГ</button>
+          <div id="kbRow2">
+            <div id="kbNum"></div>
+            <div id="kbFn"></div>
+            <button id="keyItog" class="key k-green" data-k="itog">ИТОГ</button>
+          </div>
         </div>
       </div>
     </div>
@@ -699,11 +713,7 @@ button{touch-action:manipulation;font-family:inherit}
     <div id="terminal">
       <div class="t-top">БАНКОВСКИЙ ТЕРМИНАЛ</div>
       <div id="tScreen"><div id="tL1">ОЖИДАНИЕ</div><div id="tL2">—</div></div>
-      <div class="t-pad">
-        <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
-        <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
-        <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
-      </div>
+      <div class="t-pad" id="tPad"></div>
       <div class="t-btns">
         <button class="tbtn" id="tOk">ВВОД</button>
         <button class="tbtn" id="tNo">ОТМЕНА</button>
@@ -715,7 +725,7 @@ button{touch-action:manipulation;font-family:inherit}
   <div id="drawer">
     <div class="dr-head">ДЕНЕЖНЫЙ ЯЩИК · ДЯ-2М
       <span class="hintline">кликайте по купюрам и монетам, чтобы собрать сдачу</span>
-      <span class="lock">🔒</span>
+      <button id="drLock" title="Запереть ящик">🔒</button>
     </div>
     <div class="dr-body">
       <div id="drMoney"></div>
@@ -738,13 +748,14 @@ button{touch-action:manipulation;font-family:inherit}
     <div class="card">
       <div class="stamp">Продукты №7<br>утверждаю<br>директор</div>
       <h1>ПАМЯТКА КАССИРА</h1>
-      <div class="sub">ККМ «ЭЛЕКТРОН-95» · 53 КЛАВИШИ · ВСЕ РАБОЧИЕ</div>
+      <div class="sub">ККМ «ЭЛЕКТРОН-95» · 40 ТОВАРОВ · ВСЁ НАЖИМАЕТСЯ</div>
       <ol>
         <li><b>Скан:</b> клик по товару на ленте. Штрих-код <b>перечёркнут</b>? Вбейте вручную клавишей по PLU.</li>
-        <li><b>Весовое</b> (яблоки, курица…): сначала <kbd>ВЗВ</kbd> — весы покажут вес, затем клавиша товара.</li>
+        <li><b>Весовое</b> (яблоки, курица, <b>сало, картошка</b>…): сначала <kbd>ВЗВ</kbd> — весы покажут вес, затем клавиша товара.</li>
         <li>Количество — <kbd>цифра</kbd>+клавиша. <kbd>ЦЕНА</kbd> — своя цена, <kbd>КОР</kbd> — правка количества, <kbd>ПИ</kbd> — поиск по PLU, <kbd>СЕКЦ</kbd> — секция, <kbd>КЧ</kbd> — копия чека, <kbd>РЕЖ</kbd> — подсветка, <kbd>ДЯЩИК</kbd> — ящик в любой момент.</li>
-        <li>Всё вбито — <kbd>ИТОГ</kbd>. <b>Карта:</b> <kbd>КАРТА</kbd> → <kbd>ВВОД</kbd>. <b>Наличные:</b> заберите деньги с прилавка кликами, затем сдача из ящика → <kbd>ОТДАТЬ</kbd>.</li>
+        <li>Всё вбито — <kbd>ИТОГ</kbd>. <b>Карта:</b> <kbd>КАРТА</kbd> → <kbd>ВВОД</kbd> (пин-пад клиент наберёт сам). <b>Наличные:</b> заберите деньги с прилавка кликами, затем сдача из ящика → <kbd>ОТДАТЬ</kbd>.</li>
         <li><b>Возврат:</b> пробейте товар, <kbd>ИТОГ</kbd>, <kbd>НАЛ</kbd> — и выдайте сумму из ящика.</li>
+        <li>Всё живое: клик по <b>принтеру</b> — тест печати, по <b>весам</b> — тара, по <b>покупателю</b> — реакция, 🔒 — запирает ящик.</li>
         <li><kbd>АННУЛ</kbd> — весь чек, <kbd>Z</kbd> — закрыть смену.</li>
       </ol>
       <button class="bigbtn" id="introStart">ПРИСТУПИТЬ К СМЕНЕ</button>
@@ -788,13 +799,22 @@ const PRODUCTS=[
  {id:9,name:'ГРЕЧКА',price:92,icon:'🌾',pc:'#967050'},{id:10,name:'МАСЛО',price:189,icon:'🧈',pc:'#e8cf80'},
  {id:11,name:'ВОДА',price:49,icon:'💧',pc:'#6aa8d9'},{id:12,name:'ШОКОЛАД',price:95,icon:'🍫',pc:'#7a5540'},
  {id:13,name:'КОФЕ',price:320,icon:'☕',pc:'#8a6a4f'},{id:14,name:'ПЕЧЕНЬЕ',price:78,icon:'🍪',pc:'#d0a870'},
- {id:15,name:'ЯБЛОКИ',price:129,icon:'🍎',pc:'#c95a4a'},{id:16,name:'БАНАНЫ',price:96,icon:'🍌',pc:'#e8cf5f'},
+ {id:15,name:'ЯБЛОКИ',price:129,icon:'🍎',pc:'#c95a4f'},{id:16,name:'БАНАНЫ',price:96,icon:'🍌',pc:'#e8cf5f'},
  {id:17,name:'ПОМИДОРЫ',price:159,icon:'🍅',pc:'#d04a3a'},{id:18,name:'ОГУРЦЫ',price:139,icon:'🥒',pc:'#6a9a4f'},
  {id:19,name:'КУРИЦА',price:289,icon:'🍗',pc:'#d9a06a'},{id:20,name:'РИС',price:110,icon:'🍚',pc:'#d8d2c2'},
- {id:21,name:'СОК',price:145,icon:'🧃',pc:'#e0923f'},{id:22,name:'КЕФИР',price:82,icon:'🥤',pc:'#b8c8d8'},
- {id:23,name:'ХЛОПЬЯ',price:165,icon:'🥣',pc:'#c0803f'},{id:24,name:'БУМАГА',price:64,icon:'🧻',pc:'#b8b8c0'}];
+ {id:21,name:'СОК',price:145,icon:'🧃',pc:'#e0923f'},{id:22,name:'КЕФИР',price:82,icon:'🍶',pc:'#b8c8d8'},
+ {id:23,name:'ХЛОПЬЯ',price:165,icon:'🥣',pc:'#c0803f'},{id:24,name:'БУМАГА',price:64,icon:'🧻',pc:'#b8b8c0'},
+ {id:25,name:'САЛО',price:340,icon:'🥓',pc:'#d8b0a0'},{id:26,name:'КАРТОФЕЛЬ',price:45,icon:'🥔',pc:'#b0905a'},
+ {id:27,name:'МАЙОНЕЗ',price:132,icon:'🫙',pc:'#d8d0b0'},{id:28,name:'МИЛКА',price:115,icon:'🍫',pc:'#8a4ac0'},
+ {id:29,name:'КОЛА',price:99,icon:'🥤',pc:'#a03030'},{id:30,name:'ЧИПСЫ',price:159,icon:'🍟',pc:'#d8a03f'},
+ {id:31,name:'МОРОЖЕНОЕ',price:85,icon:'🍦',pc:'#a8c8e0'},{id:32,name:'ПИВО',price:120,icon:'🍺',pc:'#c8a040'},
+ {id:33,name:'СЕМЕЧКИ',price:60,icon:'🌻',pc:'#8a7a4a'},{id:34,name:'ЛИМОНАД',price:75,icon:'🍋',pc:'#c8c040'},
+ {id:35,name:'ПЕЛЬМЕНИ',price:260,icon:'🥟',pc:'#c8b8a0'},{id:36,name:'СГУЩЁНКА',price:140,icon:'🥫',pc:'#7a9ab0'},
+ {id:37,name:'ВАФЛИ',price:88,icon:'🧇',pc:'#c89a5a'},{id:38,name:'ЛАВАШ',price:52,icon:'🫓',pc:'#c0a878'},
+ {id:39,name:'СЕЛЁДКА',price:180,icon:'🐟',pc:'#7a9ab8'},{id:40,name:'ТОРТ',price:450,icon:'🎂',pc:'#d090a8'}];
 const prod=id=>PRODUCTS.find(p=>p.id===id);
-const isWeight=id=>id>=15&&id<=19;
+const WGT=new Set([15,16,17,18,19,25,26]);
+const isWeight=id=>WGT.has(id);
 const SECN={1:'ОСНОВНАЯ',2:'АКЦИЯ',3:'ПРЕМИУМ'};
 const BILLS=[5000,2000,1000,500,200,100,50], COINS=[10,5,2,1];
 const BC={5000:'#a8423a',2000:'#38619e',1000:'#2f7d68',500:'#6d4f9e',200:'#3f8f8f',100:'#b06a2f',50:'#4f5d9e'};
@@ -804,6 +824,7 @@ const GREET=['Здравствуйте!','Добрый день!','Привет!
 const THANKS=['Спасибо!','Всего доброго!','Хорошего дня!','Благодарю!'];
 const NOPE=['Это не моё!','Я такое не брал(а)!','Ошибочка, у меня этого нет','Лишнее! Отмените'];
 const NAG=['Долго ещё?','Я тороплюсь...','Можно побыстрее?','Что так медленно?'];
+const REACT=['Да-да?','Что-то не так?','Я слушаю','М-м?','Уже можно подходить?','Ой!'];
 const SHIRTS=['#b85c48','#4a7a9e','#6a9a4f','#9a6ab0','#c09a3f','#5a8a8a','#a05a78','#7a7a52'];
 const HAIRS=['#3a2a1a','#1e1a16','#6a4a2a','#8a8a82','#5a3a3a','#c0a050'];
 const SKINS=['#f3c9a6','#e8b48c','#d9a077','#c98a62'];
@@ -844,6 +865,7 @@ const sfx={
  angry:()=>{tone(220,.18,'sawtooth',.13);tone(150,.3,'sawtooth',.13,.15)},
  card:()=>{tone(1046,.09,'sine',.11);tone(1568,.14,'sine',.09,.1)},
  scale:()=>{tone(600,.1,'sine',.08);tone(900,.12,'sine',.07,.09)},
+ pin:()=>tone(760,.06,'square',.07),
  tear:()=>tone(2800,.06,'sawtooth',.05)};
 
 /* ---------- утилиты UI ---------- */
@@ -883,7 +905,7 @@ function cashHTML(d,cls){const c=d>=50?'cash':'coin';const col=d>=50?BC[d]:CC[d]
 
 /* ---------- построение ---------- */
 function buildShelves(){['#shelfL','#shelfR'].forEach(id=>{const s=$(id);
- const cols=['#a85a3a','#4a7a5a','#7a4a3a','#b08a3f','#5a6a9a','#8a3a4a','#3f7f7f','#9a7a3f','#6a4a7a'];
+ const cols=['#a85a3a','#4a7a5a','#7a4a3a','#b08a3f','#5a6a9a','#8a3a4a','#3f7f7f','#9a7a3f','#6a4a7a','#8a4a6a'];
  for(let r=0;r<3;r++){const row=document.createElement('div');row.className='shelf-row';
   let x=0;while(x<100){const b=document.createElement('div');b.className='sbox';
    const w=rnd(10,20);b.style.width=w+'%';b.style.height=rnd(55,92)+'%';
@@ -891,7 +913,7 @@ function buildShelves(){['#shelfL','#shelfR'].forEach(id=>{const s=$(id);
   s.appendChild(row);}})}
 function buildKeys(){
  $('#kbProd').innerHTML=PRODUCTS.map(p=>
-  `<button class="key k-prod" data-k="p${p.id}" style="--pc:${p.pc}"><i>${p.id}</i><span class="pi">${p.icon}</span><b>${p.name}</b><em>${p.price}₽${isWeight(p.id)?'/КГ':''}</em></button>`).join('');
+  `<button class="key k-prod" data-k="p${p.id}" style="--pc:${p.pc}"><i>${p.id}</i><span class="prow"><span class="pi">${p.icon}</span><b>${p.name}</b></span><em>${p.price}₽${isWeight(p.id)?'/КГ':''}</em></button>`).join('');
  $('#kbNum').innerHTML=['7','8','9','4','5','6','1','2','3','0','00','C'].map(d=>
   `<button class="key${d==='C'?' k-red':''}" data-k="d${d}">${d}</button>`).join('');
  const FN=[['kolvo','КОЛ-ВО','k-slate'],['cancel','ОТМЕНА','k-red'],['price','ЦЕНА','k-slate'],
@@ -902,7 +924,13 @@ function buildKeys(){
   ['anull','АННУЛ'],['vzv','ВЗВ'],['search','ПОИСК'],['kch','КЧ']];
  $('#kbStrip').innerHTML=STRIP.map(f=>`<button class="k-strip" data-k="${f[0]}">${f[1]}</button>`).join('');
  const click=e=>{const b=e.target.closest('[data-k]');if(!b)return;sfx.key();handleKey(b.dataset.k)};
- $('#keys').addEventListener('click',click);$('#kbStrip').addEventListener('click',click);}
+ $('#keys').addEventListener('click',click);$('#kbStrip').addEventListener('click',click);
+ // пин-пад
+ const pad=$('#tPad');
+ ['1','2','3','4','5','6','7','8','9','✕','0','✓'].forEach(n=>{
+  const b=document.createElement('button');b.type='button';b.className='t-dot';b.textContent=n;pad.appendChild(b)});
+ pad.addEventListener('click',e=>{const b=e.target.closest('.t-dot');if(!b)return;
+  b.classList.add('press');setTimeout(()=>b.classList.remove('press'),220);tone(720,.05,'square',.06)});}
 function buildDrawer(){
  const money=$('#drMoney');
  const rowB=document.createElement('div');rowB.className='dr-row';
@@ -917,6 +945,21 @@ function buildDrawer(){
   const d=+s.dataset.d;G.tray.push(d);d>=50?sfx.cash():sfx.coin();
   flyTo(s,'#trItems',cashHTML(d,'mini'));
   setTimeout(renderTray,360);});}
+
+/* ---------- интерактив сцены ---------- */
+$('#printer').addEventListener('click',()=>{
+ if(G.printerBusy){toast('Принтер занят');return}
+ sfx.beep();toast('Самотестирование печати');
+ printPaper(`<div class="pl c b">ТЕСТ ПЕЧАТИ</div><div class="pl c">ЭЛЕКТРОН-95 · ФН-15М</div><div class="sep"></div><div class="pl c">ВСЕ СИСТЕМЫ В НОРМЕ</div><div class="pl c">· · · ОК · · ·</div>`,.7,null)});
+$('#scanner').addEventListener('click',()=>{sfx.scan();
+ const sc=$('#scanner');sc.classList.add('zap');setTimeout(()=>sc.classList.remove('zap'),260)});
+$('#scale').addEventListener('click',()=>{G.scaleLine=null;$('#slDisp').textContent='0.000';
+ tone(1200,.06,'triangle',.08);toast('Тара сброшена')});
+$('#drLock').addEventListener('click',()=>{closeDrawer();sfx.drawer();toast('Ящик заперт 🔒')});
+$('#bagZone').addEventListener('click',()=>{tone(340,.05,'triangle',.07);
+ const bc=$('#bagCount');bc.classList.remove('bump');void bc.offsetWidth;bc.classList.add('bump')});
+document.querySelector('.mug').addEventListener('click',()=>{tone(520,.08,'sine',.07);
+ toast(pick(['Кофе уже холодный...','Пятиминутка через час!','Это кружка завмага!']))});
 
 /* ---------- покупатели ---------- */
 const COUNTER_X=23, SLOTS=[42,57,72];
@@ -940,6 +983,7 @@ function makeCustomer(){
   <div class="p-head" style="--skin:${skin}">${hair}<span class="p-brow l"></span><span class="p-brow r"></span><span class="p-eye l"></span><span class="p-eye r"></span>${glasses}${must}<span class="p-cheek l"></span><span class="p-cheek r"></span><span class="p-mouth"></span></div>
   <div class="p-neck" style="--skin:${skin}"></div>
   <div class="p-body" style="--sh:${sh}"><span class="p-arm l" style="--sh:${sh}"></span><span class="p-arm r" style="--sh:${sh}"></span><span class="p-tag">${c.name}</span></div></div>`;
+ el.addEventListener('click',()=>{say(c,pick(REACT),1400);tone(500,.05,'sine',.05)});
  el.style.left='-14%';$('#people').appendChild(el);c.el=el;return c}
 function ensureQueue(){while(G.queue.length<3){const c=makeCustomer();G.queue.push(c);
  const i=G.queue.length-1;requestAnimationFrame(()=>requestAnimationFrame(()=>{
@@ -953,7 +997,7 @@ function genItems(type){
  if(type==='return'){
   const unit=PRODUCTS.filter(p=>!isWeight(p.id)).map(p=>p.id).sort(()=>Math.random()-.5).slice(0,rnd(1,2));
   return unit.map(id=>({pid:id,qty:1,sc:true}))}
- const n=type==='hurry'?rnd(1,2):type==='big'?rnd(4,6):rnd(2,4);
+ const n=type==='hurry'?rnd(1,2):type==='big'?rnd(4,6):rnd(2,5);
  const ids=[...PRODUCTS.map(p=>p.id)].sort(()=>Math.random()-.5).slice(0,n);
  return ids.map(id=>isWeight(id)
   ?{pid:id,qty:1,w:rnd(35,160)/100,sc:Math.random()>.16}
@@ -1070,7 +1114,7 @@ function piKey(){
  if(G.state!=='RINGING'){sfx.soft();return}
  if(!G.piMode){G.piMode=true;G.piBuf='';lcd('ПОИСК ПЛУ: _','ЦИФРЫ, ПОТОМ «ПИ»');return}
  const id=+G.piBuf;G.piMode=false;
- if(id>=1&&id<=24){const p=prod(id);flashKey('p'+id);sfx.beep();
+ if(id>=1&&id<=PRODUCTS.length){const p=prod(id);flashKey('p'+id);sfx.beep();
   lcd('ПЛУ '+id+' · '+p.name,p.price+'₽'+(isWeight(id)?'/КГ':''))}
  else{sfx.err();lcdErr();lcd('ПЛУ НЕ НАЙДЕН','—')}}
 function korKey(){
@@ -1224,7 +1268,7 @@ function nal(){
   if(G.taken===G.handed.length)finishCollect();
   else{sfx.err();toast('Сначала заберите все деньги с прилавка')}return}
  if(G.state==='TOTAL'){
-  if(G.isReturn){ // выдача возврата
+  if(G.isReturn){
    G.changeDue=total();G.tray=[];
    $('#trNeedLbl').textContent='ВЫДАТЬ:';renderTray();
    G.state='CASH_CHANGE';G.payMethod='cash';
@@ -1243,9 +1287,21 @@ function startCard(){G.state='CARD';sfx.card();
  $('#tL2').textContent=total()+' ₽';
  $('#tCard').style.setProperty('--bank',pick(BANKS));
  $('#tCard').classList.add('in');
- setTimeout(()=>{if(G.state!=='CARD')return;G.state='CARD_PROC';
-  $('#tScreen').className='dots';$('#tL1').textContent='ОБРАБОТКА';$('#tL2').textContent='';
-  setTimeout(resolveCard,1500)},1000)}
+ setTimeout(()=>{if(G.state!=='CARD')return;
+  G.state='CARD_PROC';
+  $('#tScreen').className='';$('#tL1').textContent='ВВЕДИТЕ ПИН-КОД';$('#tL2').textContent='';
+  const keys=document.querySelectorAll('.t-dot');let i=0;
+  const iv=setInterval(()=>{
+   if(G.state!=='CARD_PROC'){clearInterval(iv);return}
+   const k=keys[pick([0,1,2,3,4,5,6,7,8,10])];
+   k.classList.add('press');tone(760+i*90,.06,'square',.07);
+   setTimeout(()=>k.classList.remove('press'),280);
+   $('#tL2').textContent+='•';
+   if(++i>=4){clearInterval(iv);
+    setTimeout(()=>{if(G.state!=='CARD_PROC')return;
+     $('#tScreen').className='dots';$('#tL1').textContent='ОБРАБОТКА';$('#tL2').textContent='';
+     setTimeout(resolveCard,1300)},450)}
+  },430)},1000)}
 function resolveCard(){
  if(Math.random()<.12){
   $('#tScreen').className='bad';$('#tL1').textContent='ОТКЛОНЕНО ✗';$('#tL2').textContent='';
